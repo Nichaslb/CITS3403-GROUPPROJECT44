@@ -1,0 +1,157 @@
+/* This stylesheet is shared by multiple main pages. */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    background-color: #1b2838;
+    color: #c7d5e0;
+    flex-direction: column;
+}
+
+.main-container {
+    display: flex;
+    flex: 1;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #171a21;
+    background-image: url('../assets/sidebar-bg.avif');
+    background-repeat: no-repeat;
+    background-position: center 65%;
+    background-size: 180% auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    position: relative;
+}
+
+.sidebar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+        rgba(23, 26, 33, 0.7) 0%,
+        rgba(23, 26, 33, 0.5) 30%,
+        rgba(23, 26, 33, 0.3) 50%,
+        rgba(23, 26, 33, 0.5) 70%,
+        rgba(23, 26, 33, 0.7) 100%);
+    z-index: 1;
+}
+
+.logo-area {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+    /* Space for your logo */
+}
+
+.sidebar-menu {
+    padding: 10px 20px;
+    flex-grow: 1;
+    position: relative;
+    z-index: 2;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    padding: 14px 15px;
+    color: #c7d5e0;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+    font-size: 16px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background-color: rgba(42, 63, 90, 0.7);
+}
+
+.sidebar-menu a:hover, .sidebar-menu a.active {
+    background-color: rgba(50, 115, 220, 0.8);
+    color: #ffffff;
+}
+
+.sidebar-menu a.active {
+    background-color: rgba(50, 115, 220, 0.9);
+}
+
+.icon-placeholder {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Space for your icons */
+}
+
+.profile-button {
+    margin: 20px;
+    padding: 10px;
+    background-color: transparent;
+    border: 1px solid #4a5664;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    position: relative;
+    z-index: 2;
+    color: #c7d5e0;  /* 添加文字颜色 */
+    text-decoration: none;  /* 移除下划线 */
+}
+
+.profile-button:hover {
+    border-color: #66c0f4;
+    background-color: rgba(42, 63, 90, 0.9);
+}
+
+.profile-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #2a3f5a;
+    /* Space for profile icon */
+}
+
+.content {
+    flex: 1;
+    padding: 25px;
+    overflow-y: auto;
+}
+
+.footer {
+    background-color: #171a21;
+    padding: 15px 25px;
+    color: #7a8b9b;
+    font-size: 14px;
+    border-top: 1px solid #2a3f5a;
+    width: 100%;
+    text-align: left;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+.icon-placeholder img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
