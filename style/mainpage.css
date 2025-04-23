@@ -49,6 +49,31 @@ body {
     z-index: 1;
 }
 
+.logout {
+    margin: 20px;
+    margin-top: 524px;
+    padding-left: 30px;
+    padding-right: 30px;
+    margin-left: 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 1px solid #4a5664;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    position: relative;
+    z-index: 2;
+    color: #c7d5e0;  /* 添加文字颜色 */
+    text-decoration: none;  /* 移除下划线 */
+}
+
+.logout:hover {
+  
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 0, 0, 0.25);
+}
+
 .logo-area {
     height: 120px;
     display: flex;
