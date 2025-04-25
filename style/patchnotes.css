@@ -1,0 +1,152 @@
+/* PATCH NOTES PAGE LAYOUT */
+.patch-notes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 20px;
+    margin-left: auto; 
+    margin-right: auto; 
+    padding-left: 20px; 
+    padding-right: 20px; 
+    max-width: 1200px; 
+}
+
+.patch-selector {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    padding-left: 30px;
+    margin-bottom: 10px;
+    background-color: #1A1A1A;
+    border-radius: 8px;
+    max-width: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    color: #ccc;
+}
+
+.patch-selector label {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #C8AA6E;
+}
+
+.patch-selector select {
+    padding: 8px 12px;
+    background-color: #2a2a2a;
+    color: #ccc;
+    border: 1px solid #444;
+    border-radius: 5px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.patch-selector select:focus {
+    border-color: #0AC8B9;
+}
+
+
+
+/* Each patch note card */
+.patch-note {
+    display: flex;
+    flex-direction: row;
+    background-color: #1A1A1A;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.patch-note {
+    display: flex;
+    flex-direction: column; /* Changed from row to column */
+    background-color: #1A1A1A;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.patch-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+/* Left section: image and patch number */
+.patch-left {
+    width: 100%; /* Take full width */
+    background-color: #2a2a2a;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.patch-left .patch-image {
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.patch-left .patch-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    border-radius: 6px;
+}
+
+
+/* Right section: text content */
+.patch-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.patch-title {
+    color: #C8AA6E;
+    font-size: 1.4rem;
+    margin: 0 0 10px 0;
+}
+
+.patch-date {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.patch-description {
+    color: #ccc;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .patch-note {
+        flex-direction: column;
+    }
+
+    .patch-left {
+        width: 100%;
+        align-items: center;
+    }
+
+    .patch-left .patch-image {
+        height: 180px;
+    }
+
+    .patch-content {
+        padding: 15px;
+    }
+
+    
+    
+}
