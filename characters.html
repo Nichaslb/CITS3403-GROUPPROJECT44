@@ -103,10 +103,10 @@
         const characterBox = document.createElement('div');
         characterBox.classList.add('character-box');
         characterBox.innerHTML = `
-          <d href="character-detail.html?id=${character.id}">
+          <a href="character-detail.html?id=${character.id}">
             <img src="${character.icon}" alt="${character.name}" />
             <h3>${character.name}</h3>
-          </d>
+          </a>
         `;
         gridContainer.appendChild(characterBox);
       });

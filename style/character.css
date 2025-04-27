@@ -23,7 +23,7 @@
     
   }
 
-  .character-box h3, d {
+  .character-box h3 {
     text-decoration: none;
     font-family: 'Arial', sans-serif; /* Change the font to Arial, or any font you prefer */
     font-size: 13px; /* Set the font size to 18px, you can adjust it */

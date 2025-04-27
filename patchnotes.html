@@ -3,80 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>League of Legends Patch Notes</title>
-    <link rel="stylesheet" href="mainpage.css">
-    <link rel="stylesheet" href="patchnotes 2.css">
+    <title>League of Stats - Dashboard</title>
+    <link rel="stylesheet" href="style/mainpage.css">
+    <link rel="stylesheet" href="style/patchnotes.css">
 </head>
+
 <body>
     <div class="main-container">
         <div class="sidebar">
-            <div class="logo-area">LEAGUE OF STATS</div>
+            <div class="logo-area">
+                LEAGUE OF STATS
+            </div>
+            
             <div class="sidebar-menu">
-                <a href="dashboard.html">
-                    <div class="icon-placeholder"><img src="assets/icons/dashboard.png" alt="Dashboard Icon"></div>
+                <a href="dashboard.html" class="active">
+                    <div class="icon-placeholder">
+                        <img src="assets/icons/dashboard.png" alt="Dashboard Icon">
+                    </div>
                     Dashboard
                 </a>
                 <a href="characters.html">
-                    <div class="icon-placeholder"><img src="assets/icons/characters.png" alt="Characters Icon"></div>
+                    <div class="icon-placeholder">
+                        <img src="assets/icons/characters.png" alt="characters Icon">
+                    </div>
                     Characters
                 </a>
-                <a href="#" class="active">
-                    <div class="icon-placeholder"><img src="assets/icons/patch.png" alt="Patch Icon"></div>
+                <a href="patchnotes.html">
+                    <div class="icon-placeholder">
+                        <img src="assets/icons/patch.png" alt="patch Icon">
+                    </div>
                     Patch Notes
                 </a>
             </div>
+            
             <a href="profile.html" class="profile-button">
-                <div class="profile-icon"></div>
+                <div class="profile-icon">
+                    <!-- here is the user's avatar, we will build this function later -->
+                </div>
                 Profile
             </a>
         </div>
+        
+        <div class="content">
+            <div class="container" style="max-width: 1200px; margin: 0 auto;">
+                <div class="patch-selector">
+                    <label for="patch-dropdown">Select Patch:</label>
+                    <select id="patch-dropdown">
+                        <option value="25.08">Patch 25.08</option>
+                        <option value="25.07">Patch 25.07</option>
+                        <option value="25.06">Patch 25.06</option>
+                        <option value="25.05">Patch 25.05</option>
+                        <option value="25.04">Patch 25.04</option>
+                    </select>
+                </div>
 
-        <div class="container" style="max-width: 1200px; margin: 0 auto;">
-            <div class="patch-selector">
-                <label for="patch-dropdown">Select Patch:</label>
-                <select id="patch-dropdown">
-                    <option value="25.08">Patch 25.08</option>
-                    <option value="25.07">Patch 25.07</option>
-                    <option value="25.06">Patch 25.06</option>
-                    <option value="25.05">Patch 25.05</option>
-                    <option value="25.04">Patch 25.04</option>
-                </select>
-            </div>
-
-            <div class="patch-notes-container">
-                <div class="patch-note" data-patch="25.08">
-                    <a href="https://www.leagueoflegends.com/en-au/news/game-updates/patch-25-08-notes" target="_blank">
-                        <div class="patch-image">
-                            <img src="patch notes PoC image.jpg" alt="Patch 25.08 Image">
+                <div class="patch-notes-container">
+                    <div class="patch-note" data-patch="25.08">
+                        <a href="https://www.leagueoflegends.com/en-au/news/game-updates/patch-25-08-notes" target="_blank">
+                            <div class="patch-image">
+                                <img src="patch notes PoC image.jpg" alt="Patch 25.08 Image">
+                            </div>
+                        </a>
+                        <div class="patch-content">
+                            <span class="patch-number">Patch 25.08</span>
+                            <h3 class="patch-title">Patch 25.08 Notes</h3>
+                            <div class="patch-date">April 6, 2025</div>
+                            <p class="patch-description"> Here comes patch 25.08! Bringing some balance changes across all the currently active queues. This is also the last patch of the current Ranked Season so make sure to get your 15 wins to lock in Victorious Twisted Fate!
+                                This patch sees improvements to some items that have fallen out of the spotlight like Cryptbloom, Opportunity and Overlord's Bloodmail. As well as Mel and Zoe coming back into the meta after being out of it for a while.
+                                We're also shipping some larger work to Annie to make her a bit more satisfying by moving damage out of Tibbers' sustained damage that can be hard to feel, and into her spellcasts. For Ahri and Syndra, we feel like their builds are a little off; Ahri is building more tanky than we'd like and Syndra is able to opt too easily into lower damage purchases and still be very effective, so we're tweaking that a little. Other changes include follow-up balance to champions we've done larger work on recently like Gwen and Yorick.</p>
                         </div>
-                    </a>
-                    <div class="patch-content">
-                        <span class="patch-number">Patch 25.08</span>
-                        <h3 class="patch-title">Patch 25.08 Notes</h3>
-                        <div class="patch-date">April 6, 2025</div>
-                        <p class="patch-description"> Here comes patch 25.08! Bringing some balance changes across all the currently active queues. This is also the last patch of the current Ranked Season so make sure to get your 15 wins to lock in Victorious Twisted Fate!
-                            This patch sees improvements to some items that have fallen out of the spotlight like Cryptbloom, Opportunity and Overlord's Bloodmail. As well as Mel and Zoe coming back into the meta after being out of it for a while.
-                            We're also shipping some larger work to Annie to make her a bit more satisfying by moving damage out of Tibbers' sustained damage that can be hard to feel, and into her spellcasts. For Ahri and Syndra, we feel like their builds are a little off; Ahri is building more tanky than we'd like and Syndra is able to opt too easily into lower damage purchases and still be very effective, so we're tweaking that a little. Other changes include follow-up balance to champions we've done larger work on recently like Gwen and Yorick.</p>
                     </div>
-                </div>
-                <div class="patch-note" data-patch="25.07">
-                    <!-- Patch 25.07 content -->
-                </div>
-                <div class="patch-note" data-patch="25.06">
-                    <!-- Patch 25.06 content -->
-                </div>
-                <div class="patch-note" data-patch="25.05">
-                    <!-- Patch 25.05 content -->
-                </div>
-                <div class="patch-note" data-patch="25.04">
-                    <!-- Patch 25.04 content -->
+                    <div class="patch-note" data-patch="25.07">
+                        <!-- Patch 25.07 content -->
+                    </div>
+                    <div class="patch-note" data-patch="25.06">
+                        <!-- Patch 25.06 content -->
+                    </div>
+                    <div class="patch-note" data-patch="25.05">
+                        <!-- Patch 25.05 content -->
+                    </div>
+                    <div class="patch-note" data-patch="25.04">
+                        <!-- Patch 25.04 content -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class = 'footer'>
-        <p>League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES</p>
-    </footer>
+    
+    <div class="footer">
+        League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
+    </div>
 </body>
 </html>
