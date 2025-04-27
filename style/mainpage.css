@@ -57,6 +57,7 @@ body {
 }
 
 .logout {
+    height: 50px;
     margin: 20px;
     margin-top: 524px;
     padding-left: 30px;
@@ -170,22 +171,41 @@ body {
     overflow-y: auto;
 }
 
+
+
 .footer {
-    position: fixed;
-    bottom: 0px;
-    
-    margin-left: 50px;
+    position: fixed;    /* Make it fixed at the bottom */
+    left: 0;            /* Align to the left edge of the page */
+    right: 0;           /* Align to the right edge of the page */
+    bottom: 0;          /* Place at the bottom */
+    margin-left: 250px; /* Offset for the sidebar */
     background-color: #171a21;
-    padding: 15px 25px;
     color: #7a8b9b;
     font-size: 14px;
     border-top: 1px solid #2a3f5a;
-    width: 100%;
+    text-align: left;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;  /* Optional: Add some left padding for better alignment */
+}
+
+
+.footer1 {
+    position: static;
+    right: 0px;
+    bottom: 0px;
+    margin-left: 250px;
+    background-color: #171a21;
+    color: #7a8b9b;
+    font-size: 14px;
+    border-top: 1px solid #2a3f5a;
     text-align: left;
     height: 50px;
     display: flex;
     align-items: center;
 }
+
 .icon-placeholder img {
     width: 24px;
     height: 24px;
