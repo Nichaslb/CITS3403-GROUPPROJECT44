@@ -15,11 +15,18 @@ body {
 }
 
 .main-container {
+
+    margin-left: 250px;
     display: flex;
     flex: 1;
 }
 
 .sidebar {
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
     width: 250px;
     background-color: #171a21;
     background-image: url('../assets/sidebar-bg.avif');
@@ -30,7 +37,7 @@ body {
     flex-direction: column;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
     overflow: hidden;
-    position: relative;
+
 }
 
 .sidebar::after {
@@ -164,6 +171,10 @@ body {
 }
 
 .footer {
+    position: fixed;
+    bottom: 0px;
+    
+    margin-left: 50px;
     background-color: #171a21;
     padding: 15px 25px;
     color: #7a8b9b;
