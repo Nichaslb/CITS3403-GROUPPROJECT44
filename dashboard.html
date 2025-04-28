@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>League of Stats - Dashboard</title>
     <link rel="stylesheet" href="style/mainpage.css">
+    <link rel="stylesheet" href="style/dashboard.css">
 </head>
 
 <body>
@@ -43,13 +44,74 @@
             </a>
         </div>
         
-        <div class="content">
-            <!-- Content area left empty for you to add your own content -->
+        <!-- This is the HTML structure you should use to replace the content div in your dashboard.html file -->
+
+        <!-- Content section for dashboard.html -->
+<div class="content">
+    <div class="welcome-header">
+        <h1>Welcome, Summoner</h1>
+        <div id="queue-type">Solo/Duo</div>
+    </div>
+    
+    <!-- Player Card -->
+    <div class="player-card">
+        <div class="player-info">
+            <div class="rank-icon">
+                <img id="rank-img" src="assets/dashboard/ranks/Season_2023_-_Gold.webp" alt="Gold IV">
+                <div id="rank-name" class="rank-name">Gold IV</div>
+            </div>
+            <div class="player-details">
+                <h2>Summoner Name</h2>
+                <div id="summoner-id" class="player-tag">Summoner ID: ew8s3DVh...</div>
+            </div>
         </div>
+        
+        <div class="rank-stats">
+            <div class="stat-item">
+                <div id="win-rate" class="stat-value">47%</div>
+                <div class="stat-label">Win Rate</div>
+            </div>
+            <div class="stat-item">
+                <div id="games-played" class="stat-value">30</div>
+                <div class="stat-label">Games Played</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">3.2</div>
+                <div class="stat-label">KDA Ratio</div>
+            </div>
+            <div class="stat-item">
+                <div id="league-points" class="stat-value">0 LP</div>
+                <div class="stat-label">League Points</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Match List -->
+    <div class="match-list">
+        <h2>Recent Matches</h2>
+        
+        <!-- Match container - this is where matches will be dynamically inserted -->
+        <div class="match-list-container">
+            <!-- Loading state -->
+            <div class="loading-matches">
+                <div class="loading-spinner"></div>
+                Loading match history...
+            </div>
+        </div>
+        
+        <!-- Pagination controls -->
+        <div class="pagination">
+            <!-- Pagination buttons will be inserted here by JavaScript -->
+        </div>
+    </div>
+</div>
     </div>
     
     <div class="footer">
         League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
     </div>
 </body>
+<script src="js/riotApi.js"></script>
+<script src="js/dashboard.js"></script>
+
 </html>
