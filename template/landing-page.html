@@ -1,29 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Like</title>
-    <link rel="stylesheet" href="style/Share.css">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="../style/landingpage.css">
 </head>
-
 <body>
-    <div class="like-container">
-        <div class="like">
-            <h3>Send a like</h3>
+    <div class="bg-image"></div> <!-- The background image clashes with the Text -->
+    <!-- <div class="overlay"></div> -->
+    
+    <div class="content">
+        <div class="title-container">
+            <h1 class="main-title">League of Stats</h1>
+            <p class="subtitle">Link your stats!</p>
         </div>
-        
-        <div class="login-form">
-            <div class="form-section">
-                <label class="form-label">username</label>
-                <input type="text" class="form-input" placeholder="username here">
-            </div>
-            
-            <a href="Share.html"><button class="login-btn">Send</button></a>
-            <a href="Share.html"><button class="register-btn">Cancel</button></a>
-            
-
+        <div class="buttons">
+            <a href="signin.html"><button class="game-btn signin-btn">SIGN IN</button></a>
+            <a href="signup.html"><button class="game-btn signup-btn">SIGN UP</button></a>
         </div>
     </div>
+    
+    <div class="bottom-wave"></div>
 </body>
-</html>
+</html> 
