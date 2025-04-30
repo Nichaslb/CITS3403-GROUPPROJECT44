@@ -108,7 +108,7 @@ body {
     /* Space for your icons */
 }
 
-.profile-button {
+.profile-button, profile-button-profile {
     margin: 20px;
     padding: 10px;
     background-color: transparent;
@@ -124,8 +124,8 @@ body {
     text-decoration: none;  /* 移除下划线 */
 }
 
-.profile-button:hover {
-    border-color: #66c0f4;
+.profile-button, profile-button-profile:hover {
+    border-color: rgba(42, 63, 90, 0.9);
     background-color: rgba(42, 63, 90, 0.9);
 }
 
@@ -139,6 +139,11 @@ body {
     border-radius: 50%;
     background-color: #2a3f5a;
     /* Space for profile icon */
+}
+
+.sidebar-menu a.profile-button-profile {
+    background-color: rgba(50, 115, 220, 0.9);
+
 }
 
 .content {
