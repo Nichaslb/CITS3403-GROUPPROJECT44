@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>League of Stats - Dashboard</title>
-    <link rel="stylesheet" href="style/mainpage.css">
-    <link rel="stylesheet" href="style/dashboard.css">
+    <link rel="stylesheet" href="../style/mainpage.css">
+    <link rel="stylesheet" href="../style/dashboard.css">
 </head>
 
 <body>
@@ -18,30 +18,45 @@
             <div class="sidebar-menu">
                 <a href="#" class="active">
                     <div class="icon-placeholder">
-                        <img src="assets/icons/dashboard.png" alt="Dashboard Icon">
+                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
                     </div>
                     Dashboard
                 </a>
                 <a href="characters.html">
                     <div class="icon-placeholder">
-                        <img src="assets/icons/characters.png" alt="characters Icon">
+                        <img src="../assets/icons/characters.png" alt="characters Icon">
                     </div>
                     Characters
                 </a>
                 <a href="patchnotes.html">
                     <div class="icon-placeholder">
-                        <img src="assets/icons/patch.png" alt="patch Icon">
+                        <img src="../assets/icons/patch.png" alt="patch Icon">
                     </div>
                     Patch Notes
                 </a>
+                  
+                <a href="Share.html">
+                    <div class="icon-placeholder">
+                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                    </div>
+                    Share
+                </a>
+
+                <a href="Guide.html">
+                    <div class="icon-placeholder">
+                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                    </div>
+                    Guides
+                </a>
+
+                <a href="profile.html" class="profile-button">
+                    <div class="profile-icon">
+                        <!-- here is the user's avatar, we will build this function later -->
+                    </div>
+                    Profile
+                </a>
+
             </div>
-            
-            <a href="profile.html" class="profile-button">
-                <div class="profile-icon">
-                    <!-- here is the user's avatar, we will build this function later -->
-                </div>
-                Profile
-            </a>
         </div>
         
         <!-- This is the HTML structure you should use to replace the content div in your dashboard.html file -->
@@ -57,7 +72,7 @@
     <div class="player-card">
         <div class="player-info">
             <div class="rank-icon">
-                <img id="rank-img" src="assets/dashboard/ranks/Season_2023_-_Gold.webp" alt="Gold IV">
+                <img id="rank-img" src="../assets/dashboard/ranks/Season_2023_-_Gold.webp" alt="Gold IV">
                 <div id="rank-name" class="rank-name">Gold IV</div>
             </div>
             <div class="player-details">
@@ -104,14 +119,14 @@
             <!-- Pagination buttons will be inserted here by JavaScript -->
         </div>
     </div>
-</div>
+    </div>
     </div>
     
     <div class="footer">
         League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
     </div>
 </body>
-<script src="js/riotApi.js"></script>
-<script src="js/dashboard.js"></script>
+<script src="../js/riotApi.js"></script>
+<script src="../js/dashboard.js"></script>
 
 </html>

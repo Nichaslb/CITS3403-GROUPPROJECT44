@@ -1,9 +1,13 @@
 .SendALike {
-        height: 50px;
-        margin-top: 224px;
-        padding-left: 30px;
-        padding-right: 30px;
-        margin-left: 100px;
+        height: 40px;
+        bottom: 0px;
+        right: 0px;
+
+        margin-bottom: 60px;
+        margin-right: 20px;
+        padding-left: 10px;
+        padding-right: 10px;
+        
         background-color: rgba(0, 0, 0, 0.1);
         border: 1px solid #4a5664;
         border-radius: 8px;
@@ -14,34 +18,14 @@
         position: fixed;
         color: #c7d5e0;  /* 添加文字颜色 */
         text-decoration: none;  /* 移除下划线 */
+        
 }
 
-    
 .SendALike:hover {
       
     background-color: rgba(0, 0, 0, 0.15);
     border-color: rgba(0, 255, 76, 0.25);
 }
-
-
-.Guide {
-    height: 50px;
-    margin-top: 224px;
-    padding-left: 30px;
-    padding-right: 30px;
-    margin-left: 300px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border: 1px solid #4a5664;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: border-color 0.2s;
-    position: fixed;
-    color: #c7d5e0;  /* 添加文字颜色 */
-    text-decoration: none;  /* 移除下划线 */
-}
-
 
 
 .Guide:hover {
@@ -51,48 +35,10 @@ border-color: rgba(0, 255, 76, 0.25);
 }
 
 
+    
 
 
-.yourshare {
-    position: fixed;
-    height: 50px;
-    margin-top: 524px;
-    padding-left: 30px;
-    padding-right: 30px;
-    margin-left: 200px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border: 1px solid #4a5664;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: border-color 0.2s;
-    position: fixed;
-    color: #c7d5e0;  /* 添加文字颜色 */
-    text-decoration: none;  /* 移除下划线 */
-}
-
-.yourshare:hover {
-  
-    background-color: rgba(0, 0, 0, 0.15);
-    border-color: rgba(0, 255, 76, 0.25);
-}
-
-.MyGuide {
-    font: 18px;
-}
-
-.MyGuide:hover{
-    background-color: rgba(0, 0, 0, 0.15);
-    border-color: rgba(0, 255, 76, 0.25);
-}
 
 
-.ShareGuide {
-    font: 18px;
-}
 
-.ShareGuide:hover{
-    background-color: rgba(0, 0, 0, 0.15);
-    border-color: rgba(0, 255, 76, 0.25);
-}
+
