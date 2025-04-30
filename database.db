@@ -1,0 +1,2 @@
+from app import db
+db.create_all()  # This will create the database and tables based on your models
