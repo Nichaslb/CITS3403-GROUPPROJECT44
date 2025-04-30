@@ -1,0 +1,36 @@
+.ShareGuide {
+
+    height: 50px;
+    right: 0;
+    bottom: 0;
+    margin-bottom: 60px;
+    margin-right: 30px;
+    padding: 0 30px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 1px solid #4a5664;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    position: fixed;
+    color: #c7d5e0;  /* 添加文字颜色 */
+    text-decoration: none;  /* 移除下划线 */
+}
+
+.h3 {
+    position: absolute ;
+    margin-top: 50px;
+    padding-left: 300px;
+    text-decoration: none;
+    font-family: 'Arial', sans-serif; 
+    font-size: 10px; 
+    color: #ffffff;
+    font-weight: bold;   
+}
+
+.ShareGuide:hover {
+  
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: #66778a;
+}

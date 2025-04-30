@@ -129,6 +129,20 @@ body {
     background-color: rgba(42, 63, 90, 0.9);
 }
 
+
+.sidebar-menu a:hover, .sidebar-menu a.profile-button-profile {
+    background-color: rgba(50, 115, 220, 0.8);
+    color: #ffffff;
+}
+
+.sidebar-menu a.profile-button-profile {
+    background-color: rgba(50, 115, 220, 0.9);
+}
+
+
+
+
+
 .profile-icon {
     width: 24px;
     height: 24px;
@@ -139,11 +153,6 @@ body {
     border-radius: 50%;
     background-color: #2a3f5a;
     /* Space for profile icon */
-}
-
-.sidebar-menu a.profile-button-profile {
-    background-color: rgba(50, 115, 220, 0.9);
-
 }
 
 .content {
