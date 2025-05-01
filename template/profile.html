@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>League of Stats - Dashboard</title>
-    <link rel="stylesheet" href="../style/mainpage.css">
-    <link rel="stylesheet" href="../style/profile.css">
+    <title>League of Stats - Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/profile.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/mainpage.css') }}">
 </head>
 
 <body>
@@ -16,67 +16,79 @@
             </div>
             
             <div class="sidebar-menu">
-                <a href="dashboard.html">
+                <a href="{{ url_for('dashboard') }}">
                     <div class="icon-placeholder">
-                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon">
                     </div>
                     Dashboard
                 </a>
-                <a href="characters.html" >
+                <a href="{{ url_for('share') }}">
                     <div class="icon-placeholder">
-                        <img src="../assets/icons/characters.png" alt="characters Icon">
-                    </div>
-                    Characters
-                </a>
-                <a href="patchnotes.html">
-                    <div class="icon-placeholder">
-                        <img src="../assets/icons/patch.png" alt="patch Icon">
-                    </div>
-                    Patch Notes
-                </a>
-
-                <a href="Share.html">
-                    <div class="icon-placeholder">
-                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Share Icon">
                     </div>
                     Share
                 </a>
-
-                <a href="Guide.html" >
-                    <div class="icon-placeholder">
-                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
-                    </div>
-                    Guides
-                </a>
-
-                <a href="profile.html" class="profile-button-profile" >  
-                    <div class="profile-icon">
-                        <!-- here is the user's avatar, we will build this function later -->
-                    </div>
-                    Profile
-                </a>
-
             </div>
+            <a href="{{ url_for('profile') }}" class="profile-button active">
+                <div class="profile-icon">
+                    <!-- 用户头像 -->
+                </div>
+                Profile
+            </a>
         </div>
         
-        <a class="Character">
-        </a>
-        
-        <a class="WelcomePage">
-            Welcome back, Summoner! Ready to climb the ranks and make some epic plays?
-            Let's show the Rift what you're made of today! 🚀🎮
-        
-        </a>
-
-
-
-        <a href="landing-page.html" class="logout">
-            Logout
-        </a>
-
-        
         <div class="content">
-            <!-- Content area left empty for you to add your own content -->
+            <div class="profile-section">
+                <h1>Your Profile</h1>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <div class="profile-info">
+                    <div class="info-item">
+                        <h3>Account Information</h3>
+                        <p><strong>Username:</strong> {{ user.username }}</p>
+                        <p><strong>Email:</strong> {{ user.email }}</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3>Game Information</h3>
+                        <form method="POST" action="{{ url_for('update_profile') }}" class="update-form">
+                            <div class="form-group">
+                                <label for="riot_id">Riot ID:</label>
+                                <input type="text" id="riot_id" name="riot_id" value="{{ user.riot_id or '' }}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="tagline">Tagline:</label>
+                                <input type="text" id="tagline" name="tagline" value="{{ user.tagline or '' }}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="region">Region:</label>
+                                <select id="region" name="region">
+                                    <option value="" {% if not user.region %}selected{% endif %}>Select your region</option>
+                                    <option value="asia" {% if user.region == 'asia' %}selected{% endif %}>Asia</option>
+                                    <option value="europe" {% if user.region == 'europe' %}selected{% endif %}>Europe</option>
+                                    <option value="america" {% if user.region == 'america' %}selected{% endif %}>Americas</option>
+                                    <option value="oceania" {% if user.region == 'oceania' %}selected{% endif %}>Oceania</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="update-btn">Update Profile</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="logout-section">
+                    <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+                </div>
+            </div>
         </div>
     </div>
     

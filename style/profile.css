@@ -1,80 +1,147 @@
-.WelcomePage a{
-    text-decoration: none;
-    font-family: 'Arial', sans-serif; 
-    font-size: 13px; 
-    color: #ffffff; 
-    font-weight: bold; 
+/* Profile Page Styles */
+.profile-section {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-.WelcomePage {
-    
-    height: 80px;
-    width: 400px;
-    margin-left: 400px;
-    margin-top: 100px;
+.profile-section h1 {
+    color: #0A1428;
+    margin-bottom: 30px;
+    font-size: 28px;
+    border-bottom: 2px solid #C89B3C;
+    padding-bottom: 10px;
+}
+
+.alert {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.alert-error {
+    background-color: #dc3545;
+    color: white;
+}
+
+.alert-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.profile-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.info-item {
+    flex: 1;
+    min-width: 300px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-item h3 {
+    color: #0A1428;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.info-item p {
+    margin: 10px 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
     padding: 10px;
-    transition: background-color 0.2s, color 0.2s;
-    /* align-items: center; */
-    border: 1px solid #4a5664;
-    border-radius: 8px;
-    background-color: rgba(0, 0, 0, 0.17);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+}
+
+.update-btn {
+    background-color: #0A1428;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.update-btn:hover {
+    background-color: #091428;
+}
+
+.logout-section {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.logout-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    display: inline-block;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+    text-decoration: none;
+}
+
+/* 活动菜单项的样式 */
+.sidebar-menu a.active,
+.profile-button.active {
+    background-color: rgba(200, 155, 60, 0.3);
+    color: #C89B3C;
+    font-weight: bold;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .profile-info {
+        flex-direction: column;
+    }
     
-    cursor: pointer;
-    position: static;
-    position: fixed;
-    
-}
-
-.WelcomePage:hover {
-    background-color: rgba(0, 0, 0, 0.15);
-    border-color: rgba(53, 53, 53, 0.25);
-}
-
-.logout {
-    height: 50px;
-    margin-top: 524px;
-    padding-left: 30px;
-    padding-right: 30px;
-    margin-left: 20px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border: 1px solid #4a5664;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: border-color 0.2s;
-    position: fixed;
-    color: #c7d5e0;  /* 添加文字颜色 */
-    text-decoration: none;  /* 移除下划线 */
-}
-
-.logout:hover {
-  
-    background-color: rgba(0, 0, 0, 0.15);
-    border-color: rgba(255, 0, 0, 0.25);
-}
-
-.share {
-    height: 50px;
-
-    margin-top: 524px;
-    padding-left: 30px;
-    padding-right: 30px;
-    margin-left: 200px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border: 1px solid #4a5664;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: border-color 0.2s;
-    position: fixed;
-    color: #c7d5e0;  /* 添加文字颜色 */
-    text-decoration: none;  /* 移除下划线 */
-}
-
-.share:hover {
-  
-    background-color: rgba(0, 0, 0, 0.15);
-    border-color: rgba(0, 255, 76, 0.25);
+    .info-item {
+        min-width: 100%;
+    }
 }

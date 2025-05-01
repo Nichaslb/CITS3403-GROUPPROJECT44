@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
-    <link rel="stylesheet" href="../style/landingpage.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/landingpage.css') }}">
 </head>
 <body>
     <div class="bg-image"></div> <!-- The background image clashes with the Text -->
@@ -16,8 +16,8 @@
             <p class="subtitle">Link your stats!</p>
         </div>
         <div class="buttons">
-            <a href="signin.html"><button class="game-btn signin-btn">SIGN IN</button></a>
-            <a href="signup.html"><button class="game-btn signup-btn">SIGN UP</button></a>
+            <a href="{{ url_for('login') }}"><button class="game-btn signin-btn">SIGN IN</button></a>
+            <a href="{{ url_for('register') }}"><button class="game-btn signup-btn">SIGN UP</button></a>
         </div>
     </div>
     
