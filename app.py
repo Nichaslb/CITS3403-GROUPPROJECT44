@@ -7,8 +7,8 @@ import os
 
 app = Flask(__name__, 
            template_folder='template',
-           static_url_path='',       # 移除URL前缀
-           static_folder='.')        # 使用项目根目录作为静态文件目录
+           static_url_path='',       # 移除URL前缀 // remove URL prefix
+           static_folder='.')        # 使用项目根目录作为静态文件目录 // Use the project root directory as the static file directory
 
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['DATABASE'] = 'users.db'
@@ -48,7 +48,7 @@ def register():
         email = form.email.data
         password = form.password.data
         
-        # 检查用户名或邮箱是否已存在
+        # 检查用户名或邮箱是否已存在 // Check if username or email already exists
         conn = get_db_connection()
         user = conn.execute('SELECT * FROM users WHERE username = ? OR email = ?',
                           (username, email)).fetchone()
@@ -58,12 +58,12 @@ def register():
             conn.close()
             return render_template('signup.html', form=form)
         
-        # 创建新用户
+        # 创建新用户 // Create new user
         hashed_password = generate_password_hash(password)
         conn.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
                    (username, email, hashed_password))
         
-        # 如果表中有riot_id和region字段，则保存这些信息
+        # 如果表中有riot_id和region字段，则保存这些信息 // If the table has riot_id and region fields, save this information
         if 'riot_id' in request.form and 'tagline' in request.form and 'region' in request.form:
             riot_id = request.form['riot_id']
             tagline = request.form['tagline']
@@ -74,7 +74,7 @@ def register():
                     conn.execute('UPDATE users SET riot_id = ?, tagline = ?, region = ? WHERE id = ?',
                                (riot_id, tagline, region, user_id))
                 except sqlite3.OperationalError:
-                    # 如果表中没有这些字段，忽略错误
+                    # 如果表中没有这些字段，忽略错误 // Ignore the error if these fields do not exist
                     pass
         
         conn.commit()
@@ -98,17 +98,17 @@ def login():
         conn.close()
         
         if user and check_password_hash(user['password'], password):
-            # 登录成功
+            # 登录成功 // Login successful
             session.clear()
             session['user_id'] = user['id']
             session['username'] = user['username']
             
-            # 设置会话持久性，如果"记住我"被选中，则为3天
+            # 设置会话持久性，如果"记住我"被选中，则为3天 // Set session persistence, if "remember me" is selected, then for 3 days
             if remember:
                 session.permanent = True
                 app.permanent_session_lifetime = 60 * 60 * 24 * 3  # 3天
             
-            # 重定向到下一页或仪表板
+            # 重定向到下一页或仪表板 // Redirect to the next page or dashboard
             next_page = request.args.get('next')
             if not next_page or not next_page.startswith('/'):
                 next_page = url_for('dashboard')
@@ -156,20 +156,20 @@ def update_profile():
     flash('个人资料已更新', 'success')
     return redirect(url_for('profile'))
 
-# 以下是您正在使用的路由，保留share路由以保证兼容性
+# 以下是您正在使用的路由，保留share路由以保证兼容性 // The following are the routes you are using, keeping the share route for compatibility
 @app.route('/share')
 @login_required
 def share():
     return render_template('share.html')
 
 if __name__ == '__main__':
-    # 强制初始化数据库
+    # 强制初始化数据库 // Force database initialization
     print("Attempting to initialize database...")
     if not os.path.exists(app.config['DATABASE']):
         init_db()
         print("Database created.")
     else:
-        # 即使数据库文件存在，也重新初始化表结构
+        # 即使数据库文件存在，也重新初始化表结构 // Reinitialize the table structure even if the database file exists
         os.remove(app.config['DATABASE'])
         init_db()
         print("Database recreated.")
