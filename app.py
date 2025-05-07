@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
-import sqlite3
+from models import db, User  # 导入models.py中的db和User
 from forms import LoginForm, RegisterForm
 from functools import wraps
 import os
@@ -11,27 +11,24 @@ app = Flask(__name__,
            static_folder='.')        # 使用项目根目录作为静态文件目录 // Use the project root directory as the static file directory
 
 app.config['SECRET_KEY'] = os.urandom(24)
-app.config['DATABASE'] = 'users.db'
 
-def get_db_connection():
-    conn = sqlite3.connect(app.config['DATABASE'])
-    conn.row_factory = sqlite3.Row
-    return conn
+# 配置SQLAlchemy数据库
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-def init_db():
-    with app.app_context():
-        db = get_db_connection()
-        with open('schema.sql') as f:
-            db.executescript(f.read())
-        db.commit()
-        db.close()
-        print("Database initialized successfully.")
+# 初始化数据库
+db.init_app(app)
+
+# 确保在应用启动前创建所有数据库表
+with app.app_context():
+    db.create_all()
+    print("Database tables created or confirmed.")
 
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
-            flash('请先登录以访问该页面', 'error')
+            flash('Please login', 'error')
             return redirect(url_for('login', next=request.url))
         return f(*args, **kwargs)
     return decorated_function
@@ -49,38 +46,34 @@ def register():
         password = form.password.data
         
         # 检查用户名或邮箱是否已存在 // Check if username or email already exists
-        conn = get_db_connection()
-        user = conn.execute('SELECT * FROM users WHERE username = ? OR email = ?',
-                          (username, email)).fetchone()
+        existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
         
-        if user:
-            flash('用户名或邮箱已存在', 'error')
-            conn.close()
+        if existing_user:
+            flash('username or email already exsit', 'error')
             return render_template('signup.html', form=form)
         
         # 创建新用户 // Create new user
         hashed_password = generate_password_hash(password)
-        conn.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
-                   (username, email, hashed_password))
+        new_user = User(
+            username=username,
+            email=email,
+            password=hashed_password
+        )
         
-        # 如果表中有riot_id和region字段，则保存这些信息 // If the table has riot_id and region fields, save this information
+        # 如果表单中有riot_id等字段，则保存这些信息 // If the form has riot_id etc. fields, save this information
         if 'riot_id' in request.form and 'tagline' in request.form and 'region' in request.form:
             riot_id = request.form['riot_id']
             tagline = request.form['tagline']
             region = request.form['region']
             if riot_id and tagline and region:
-                user_id = conn.execute('SELECT last_insert_rowid()').fetchone()[0]
-                try:
-                    conn.execute('UPDATE users SET riot_id = ?, tagline = ?, region = ? WHERE id = ?',
-                               (riot_id, tagline, region, user_id))
-                except sqlite3.OperationalError:
-                    # 如果表中没有这些字段，忽略错误 // Ignore the error if these fields do not exist
-                    pass
+                new_user.riot_id = riot_id
+                new_user.tagline = tagline
+                new_user.region = region
         
-        conn.commit()
-        conn.close()
+        db.session.add(new_user)
+        db.session.commit()
         
-        flash('注册成功，请登录', 'success')
+        flash('Sign up succeed! Now login...', 'success')
         return redirect(url_for('login'))
     
     return render_template('signup.html', form=form)
@@ -93,15 +86,14 @@ def login():
         password = form.password.data
         remember = True if request.form.get('remember') else False
         
-        conn = get_db_connection()
-        user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
-        conn.close()
+        # 使用ORM查询用户
+        user = User.query.filter_by(username=username).first()
         
-        if user and check_password_hash(user['password'], password):
+        if user and check_password_hash(user.password, password):
             # 登录成功 // Login successful
             session.clear()
-            session['user_id'] = user['id']
-            session['username'] = user['username']
+            session['user_id'] = user.id
+            session['username'] = user.username
             
             # 设置会话持久性，如果"记住我"被选中，则为3天 // Set session persistence, if "remember me" is selected, then for 3 days
             if remember:
@@ -113,17 +105,17 @@ def login():
             if not next_page or not next_page.startswith('/'):
                 next_page = url_for('dashboard')
             
-            flash('登录成功！', 'success')
+            flash('Login success！', 'success')
             return redirect(next_page)
         else:
-            flash('用户名或密码不正确', 'error')
+            flash('Username or password not correct', 'error')
     
     return render_template('signin.html', form=form)
 
 @app.route('/logout')
 def logout():
     session.clear()
-    flash('您已成功退出登录', 'info')
+    flash('Log out!', 'info')
     return redirect(url_for('welcome'))
 
 @app.route('/dashboard')
@@ -134,43 +126,29 @@ def dashboard():
 @app.route('/profile')
 @login_required
 def profile():
-    conn = get_db_connection()
-    user = conn.execute('SELECT * FROM users WHERE id = ?', 
-                      (session['user_id'],)).fetchone()
-    conn.close()
+    # 使用ORM查询用户
+    user = User.query.get(session['user_id'])
     return render_template('profile.html', user=user)
 
 @app.route('/update_profile', methods=['POST'])
 @login_required
 def update_profile():
-    riot_id = request.form.get('riot_id', '')
-    tagline = request.form.get('tagline', '')
-    region = request.form.get('region', '')
+    # 使用ORM更新用户资料
+    user = User.query.get(session['user_id'])
     
-    conn = get_db_connection()
-    conn.execute('UPDATE users SET riot_id = ?, tagline = ?, region = ? WHERE id = ?',
-               (riot_id, tagline, region, session['user_id']))
-    conn.commit()
-    conn.close()
+    user.riot_id = request.form.get('riot_id', '')
+    user.tagline = request.form.get('tagline', '')
+    user.region = request.form.get('region', '')
     
-    flash('个人资料已更新', 'success')
+    db.session.commit()
+    
+    flash('Profile updated', 'success')
     return redirect(url_for('profile'))
 
-# 以下是您正在使用的路由，保留share路由以保证兼容性 // The following are the routes you are using, keeping the share route for compatibility
 @app.route('/share')
 @login_required
 def share():
     return render_template('share.html')
 
 if __name__ == '__main__':
-    # 强制初始化数据库 // Force database initialization
-    print("Attempting to initialize database...")
-    if not os.path.exists(app.config['DATABASE']):
-        init_db()
-        print("Database created.")
-    else:
-        # 即使数据库文件存在，也重新初始化表结构 // Reinitialize the table structure even if the database file exists
-        os.remove(app.config['DATABASE'])
-        init_db()
-        print("Database recreated.")
     app.run(debug=True)
