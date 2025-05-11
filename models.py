@@ -16,6 +16,7 @@ class User(db.Model):
     region = db.Column(db.String(20), nullable=True)
     puuid = db.Column(db.String(100), nullable=True)  # 添加了 puuid 字段，以支持 API 功能
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
     
     def __repr__(self):
         return f'<User {self.username}>'
@@ -54,3 +55,18 @@ class GameModeStats(db.Model):
     last_updated = db.Column(db.DateTime, default=datetime.utcnow)
     
     user = db.relationship('User', backref=db.backref('game_mode_stats', uselist=False))
+
+class Friend(db.Model):
+    __tablename__ = 'friends'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    friend_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # 建立与User的关系
+    user = db.relationship('User', foreign_keys=[user_id], backref=db.backref('friends_added', lazy=True))
+    friend = db.relationship('User', foreign_keys=[friend_id], backref=db.backref('friends_of', lazy=True))
+    
+    def __repr__(self):
+        return f'<Friend {self.user_id}-{self.friend_id}>'

@@ -5,11 +5,10 @@ import os
 import requests
 import time
 from functools import wraps
-import logging
-from logging.handlers import RotatingFileHandler
+from flask_migrate import Migrate
 
 # 从models导入数据库模型
-from models import db, User, GameModeStats, MatchRecord
+from models import db, User, GameModeStats, MatchRecord, Friend  # 确保从models导入Friend
 from forms import LoginForm, RegisterForm
 from routes.riot_api import fetch_puuid, fetch_rank_info, fetch_match_list, fetch_match_details, get_api_key
 
@@ -29,6 +28,8 @@ app.config['RIOT_API_KEY'] = os.environ.get('RIOT_API_KEY', '')
 
 # 初始化数据库
 db.init_app(app)
+
+migrate = Migrate(app, db)
 
 # 确保在应用启动前创建所有数据库表
 with app.app_context():
@@ -101,7 +102,11 @@ def login():
         user = User.query.filter_by(username=username).first()
         
         if user and check_password_hash(user.password, password):
-            # 登录成功 // Login successful
+            # 更新最后登录时间
+            user.last_login = datetime.utcnow()
+            db.session.commit()
+            
+            # 登录成功
             session.clear()
             session['user_id'] = user.id
             session['username'] = user.username
@@ -140,6 +145,13 @@ def profile():
     # 使用ORM查询用户
     user = User.query.get(session['user_id'])
     return render_template('profile.html', user=user)
+
+@app.route('/friends')
+@login_required
+def friends():
+    # 获取当前用户
+    user = User.query.get(session['user_id'])
+    return render_template('friends.html', user=user)
 
 @app.route('/update_profile', methods=['POST'])
 @login_required
@@ -362,76 +374,162 @@ def api_recent_matches():
         "data": match_list
     })
 
+@app.route('/api/search_user', methods=['GET'])
+@login_required
+def api_search_user():
+    """通过用户名搜索其他用户"""
+    search_term = request.args.get('query', '')
+    username = request.args.get('username', '')
+    exact = request.args.get('exact', 'false').lower() == 'true'
+    
+    # 使用 username 参数或者 query 参数
+    search_value = username or search_term
+    
+    if not search_value:
+        return jsonify({
+            "status": "error", 
+            "message": "请提供搜索条件"
+        }), 400
+    
+    # 搜索用户（避免搜索到当前用户）
+    current_user_id = session.get('user_id')
+    
+    if exact:
+        # 精确匹配
+        users = User.query.filter(
+            User.id != current_user_id,
+            User.username == search_value
+        ).limit(10).all()
+    else:
+        # 模糊匹配
+        users = User.query.filter(
+            User.id != current_user_id,
+            User.username.like(f'%{search_value}%')
+        ).limit(10).all()
+    
+    user_list = [{
+        "id": user.id,
+        "username": user.username,
+        "riot_id": user.riot_id,
+        "tagline": user.tagline,
+        "region": user.region
+    } for user in users]
+    
+    return jsonify({
+        "status": "success",
+        "data": user_list
+    })
+
+@app.route('/api/friends')
+@login_required
+def api_get_friends():
+    """获取当前用户的好友列表"""
+    current_user_id = session.get('user_id')
+    
+    # 查询好友关系
+    friends = Friend.query.filter_by(user_id=current_user_id).all()
+    
+    friend_list = []
+    for friend_rel in friends:
+        # 获取好友的用户信息
+        friend = User.query.get(friend_rel.friend_id)
+        if friend:
+            friend_list.append({
+                "id": friend.id,
+                "username": friend.username,
+                "riot_id": friend.riot_id,
+                "tagline": friend.tagline,
+                "region": friend.region,
+                "last_login": friend.last_login.isoformat() if friend.last_login else None
+            })
+    
+    return jsonify({
+        "status": "success",
+        "data": friend_list
+    })
+
+@app.route('/api/add_friend', methods=['POST'])
+@login_required
+def api_add_friend():
+    """添加好友"""
+    friend_id = request.json.get('friend_id')
+    
+    if not friend_id:
+        return jsonify({"status": "error", "message": "未提供好友ID"}), 400
+    
+    current_user_id = session.get('user_id')
+    
+    # 检查是否已经是好友
+    existing = Friend.query.filter_by(
+        user_id=current_user_id, 
+        friend_id=friend_id
+    ).first()
+    
+    if existing:
+        return jsonify({"status": "error", "message": "已经是好友"}), 400
+    
+    # 检查用户是否存在
+    friend = User.query.get(friend_id)
+    if not friend:
+        return jsonify({"status": "error", "message": "用户不存在"}), 404
+    
+    # 添加好友关系
+    new_friend = Friend(user_id=current_user_id, friend_id=friend_id)
+    db.session.add(new_friend)
+    
+    # 互相添加（可选）
+    new_friend_back = Friend(user_id=friend_id, friend_id=current_user_id)
+    db.session.add(new_friend_back)
+    
+    db.session.commit()
+    
+    return jsonify({
+        "status": "success",
+        "message": f"已添加 {friend.username} 为好友"
+    })
+
+@app.route('/api/remove_friend', methods=['POST'])
+@login_required
+def api_remove_friend():
+    """删除好友"""
+    friend_id = request.json.get('friend_id')
+    
+    if not friend_id:
+        return jsonify({"status": "error", "message": "未提供好友ID"}), 400
+    
+    current_user_id = session.get('user_id')
+    
+    # 查找好友关系
+    friend_rel = Friend.query.filter_by(
+        user_id=current_user_id, 
+        friend_id=friend_id
+    ).first()
+    
+    if not friend_rel:
+        return jsonify({"status": "error", "message": "好友关系不存在"}), 404
+    
+    # 获取好友用户名
+    friend = User.query.get(friend_id)
+    friend_username = friend.username if friend else "未知用户"
+    
+    # 删除好友关系
+    db.session.delete(friend_rel)
+    
+    # 删除对方的好友关系（如果存在）
+    friend_rel_back = Friend.query.filter_by(
+        user_id=friend_id, 
+        friend_id=current_user_id
+    ).first()
+    
+    if friend_rel_back:
+        db.session.delete(friend_rel_back)
+    
+    db.session.commit()
+    
+    return jsonify({
+        "status": "success",
+        "message": f"已从好友列表中移除 {friend_username}"
+    })
+
 if __name__ == '__main__':
-    # 设置日志
-    if not os.path.exists('logs'):
-        os.mkdir('logs')
-    file_handler = RotatingFileHandler('logs/app.log', maxBytes=10240, backupCount=10)
-    file_handler.setFormatter(logging.Formatter(
-        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
-    ))
-    file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)
-    app.logger.setLevel(logging.INFO)
-    app.logger.info('Flask应用启动')
     app.run(debug=True)
-
-@app.route('/api/rank/<puuid>')
-@login_required
-def api_get_rank(puuid):
-    # 获取API密钥
-    api_key = get_api_key()
-    if not api_key:
-        return jsonify({"status": "error", "message": "无法获取API密钥"}), 500
-    
-    # 调用Riot API获取段位信息
-    rank_info = fetch_rank_info(puuid, api_key)
-    
-    if "error" in rank_info:
-        return jsonify({"status": "error", "message": rank_info["error"]}), 400
-    
-    return jsonify({
-        "status": "success", 
-        "data": rank_info
-    })
-
-@app.route('/api/matches/<puuid>')
-@login_required
-def api_get_matches(puuid):
-    # 获取查询参数
-    count = request.args.get('count', default=20, type=int)
-    
-    # 获取API密钥
-    api_key = get_api_key()
-    if not api_key:
-        return jsonify({"status": "error", "message": "无法获取API密钥"}), 500
-    
-    # 调用Riot API获取比赛列表
-    match_list = fetch_match_list(puuid, count, api_key)
-    
-    if isinstance(match_list, dict) and "error" in match_list:
-        return jsonify({"status": "error", "message": match_list["error"]}), 400
-    
-    return jsonify({
-        "status": "success", 
-        "data": match_list
-    })
-
-@app.route('/api/match/<match_id>')
-@login_required
-def api_get_match_details(match_id):
-    # 获取API密钥
-    api_key = get_api_key()
-    if not api_key:
-        return jsonify({"status": "error", "message": "无法获取API密钥"}), 500
-    
-    # 调用Riot API获取比赛详情
-    match_details = fetch_match_details(match_id, api_key)
-    
-    if isinstance(match_details, dict) and "error" in match_details:
-        return jsonify({"status": "error", "message": match_details["error"]}), 400
-    
-    return jsonify({
-        "status": "success", 
-        "data": match_details
-    })

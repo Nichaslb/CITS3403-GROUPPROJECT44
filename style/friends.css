@@ -1,0 +1,160 @@
+/* style/friends.css */
+
+.friends-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.search-section, .friends-list-section {
+    background-color: rgba(30, 35, 40, 0.8);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+    color: #cdfafa;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #3f464e;
+    padding-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#search-username {
+    flex: 1;
+    padding: 10px 15px;
+    background-color: #1e2328;
+    border: 1px solid #3f464e;
+    border-radius: 4px;
+    color: #f0e6d2;
+    font-size: 14px;
+}
+
+#search-username:focus {
+    outline: none;
+    border-color: #c8aa6e;
+}
+
+#search-button {
+    background-color: #c8aa6e;
+    color: #1e2328;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+#search-button:hover {
+    background-color: #f0e6d2;
+}
+
+.search-results {
+    margin-top: 15px;
+    min-height: 50px;
+}
+
+.search-result-item, .friend-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #111318;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
+}
+
+.search-result-item:hover, .friend-item:hover {
+    background-color: #1e2328;
+}
+
+.result-info, .friend-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+}
+
+.result-username, .friend-username {
+    color: #f0e6d2;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.result-riot-id, .friend-riot-id {
+    color: #a09b8c;
+    font-size: 14px;
+}
+
+.friend-last-login {
+    color: #5b5a56;
+    font-size: 12px;
+    margin-right: 15px;
+}
+
+.add-friend-btn, .remove-friend-btn {
+    background-color: #0acbe6;
+    color: #111318;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.add-friend-btn:hover {
+    background-color: #cdfafa;
+}
+
+.remove-friend-btn {
+    background-color: #e65252;
+}
+
+.remove-friend-btn:hover {
+    background-color: #ff7070;
+}
+
+.loading-friends {
+    color: #a09b8c;
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+}
+
+.no-friends-message, .no-results-message {
+    color: #a09b8c;
+    text-align: center;
+    padding: 20px;
+}
+
+.error-message {
+    color: #e65252;
+    background-color: rgba(230, 82, 82, 0.1);
+    border-radius: 4px;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.success-message {
+    color: #0acbe6;
+    background-color: rgba(10, 203, 230, 0.1);
+    border-radius: 4px;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 10px;
+}

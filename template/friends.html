@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>League of Stats - Friends</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/mainpage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/friends.css') }}">
+    <link rel="stylesheet" href="/style/cursor.css">
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="logo-area">
+                LEAGUE OF STATS
+            </div>
+            
+            <div class="sidebar-menu">
+                <a href="{{ url_for('dashboard') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                    </div>
+                    Dashboard
+                </a>
+
+                <a href="{{ url_for('share') }}" >
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                    </div>
+                    Share
+                </a>
+
+                <a href="{{ url_for('friends') }}" class="active">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                    </div>
+                    Friends
+                </a>
+            </div>
+
+            <a href="{{ url_for('profile') }}" class="profile-button">
+                <div class="profile-icon">
+                    <!-- here is the user's avatar, we will build this function later -->
+                </div>
+                Profile
+            </a>
+        </div>
+
+        <div class="content">
+            <div class="friends-container">
+                <div class="search-section">
+                    <h2>Find Friends</h2>
+                    <div class="search-container">
+                        <input type="text" id="search-username" placeholder="Enter exact username">
+                        <button id="search-button">Search</button>
+                    </div>
+                    <div id="search-results" class="search-results">
+                        <!-- Search results will appear here -->
+                    </div>
+                </div>
+
+                <div class="friends-list-section">
+                    <h2>Your Friends</h2>
+                    <div class="friends-list" id="friends-list">
+                        <!-- Friends list will be populated here -->
+                        <div class="loading-friends">Loading your friends list...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
+    </div>
+
+    <!-- Template for friend items -->
+    <template id="friend-item-template">
+        <div class="friend-item">
+            <div class="friend-info">
+                <div class="friend-username"></div>
+                <div class="friend-riot-id"></div>
+            </div>
+            <div class="friend-last-login"></div>
+            <button class="remove-friend-btn">Remove</button>
+        </div>
+    </template>
+
+    <!-- Template for search result -->
+    <template id="search-result-template">
+        <div class="search-result-item">
+            <div class="result-info">
+                <div class="result-username"></div>
+                <div class="result-riot-id"></div>
+            </div>
+            <button class="add-friend-btn">Add Friend</button>
+        </div>
+    </template>
+
+    <script src="/js/friends.js"></script>
+</body>
+</html>
