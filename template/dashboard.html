@@ -42,71 +42,89 @@
         <!-- This is the HTML structure you should use to replace the content div in your dashboard.html file -->
 
         <!-- Content section for dashboard.html -->
+<!-- 修改后的content部分 -->
 <div class="content">
     <div class="welcome-header">
-        <h1>Welcome, {{ session.username }}</h1>
-        <div id="queue-type">Solo/Duo</div>
+        <h1>Hi, {{ session.username }}</h1>
+        <div id="riot-id" class="player-tag">Loading Riot ID...</div>
     </div>
     
-    <!-- Player Card -->
-    <div class="player-card">
-        <div class="player-info">
-            <div class="rank-icon">
-                <img id="rank-img" src="{{ url_for('static', filename='assets/dashboard/ranks/Season_2023_-_Gold.webp') }}" alt="Gold IV">
-                <div id="rank-name" class="rank-name">Gold IV</div>
+    <!-- 游戏模式统计卡片 -->
+    <div class="stats-card">
+        <h2>Your Recent 30 Matches Analysis</h2>
+        
+        <div id="loading-stats" class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Analyzing your match history...</p>
+        </div>
+        
+        <div id="error-stats" class="error-message" style="display: none;">
+            <p>Couldn't load your stats. Please make sure your Riot ID is set in your profile.</p>
+            <button id="retry-button" class="action-button">Retry</button>
+        </div>
+        
+        <div id="stats-container" class="stats-grid" style="display: none;">
+            <div class="stat-card sr-card">
+                <div class="stat-icon">
+                    <img src="{{ url_for('static', filename='assets/icons/5v5.png') }}" alt="Summoner's Rift">
+                </div>
+                <div class="stat-info">
+                    <h3>Summoner's Rift (5v5)</h3>
+                    <div class="stat-percentage">
+                        <div id="sr-percentage" class="percentage-value">0%</div>
+                        <div class="percentage-bar">
+                            <div id="sr-bar" class="percentage-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="player-details">
-                <h2>Summoner Name</h2>
-                <div id="summoner-id" class="player-tag">Summoner ID: ew8s3DVh...</div>
+            
+            <div class="stat-card aram-card">
+                <div class="stat-icon">
+                    <img src="{{ url_for('static', filename='assets/icons/aram.png') }}" alt="ARAM">
+                </div>
+                <div class="stat-info">
+                    <h3>ARAM</h3>
+                    <div class="stat-percentage">
+                        <div id="aram-percentage" class="percentage-value">0%</div>
+                        <div class="percentage-bar">
+                            <div id="aram-bar" class="percentage-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card fun-card">
+                <div class="stat-icon">
+                    <img src="{{ url_for('static', filename='assets/icons/fun.png') }}" alt="Fun Modes">
+                </div>
+                <div class="stat-info">
+                    <h3>Fun Modes</h3>
+                    <div class="stat-percentage">
+                        <div id="fun-percentage" class="percentage-value">0%</div>
+                        <div class="percentage-bar">
+                            <div id="fun-bar" class="percentage-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <div class="rank-stats">
-            <div class="stat-item">
-                <div id="win-rate" class="stat-value">47%</div>
-                <div class="stat-label">Win Rate</div>
-            </div>
-            <div class="stat-item">
-                <div id="games-played" class="stat-value">30</div>
-                <div class="stat-label">Games Played</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value">3.2</div>
-                <div class="stat-label">KDA Ratio</div>
-            </div>
-            <div class="stat-item">
-                <div id="league-points" class="stat-value">0 LP</div>
-                <div class="stat-label">League Points</div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Match List -->
-    <div class="match-list">
-        <h2>Recent Matches</h2>
-        
-        <!-- Match container - this is where matches will be dynamically inserted -->
-        <div class="match-list-container">
-            <!-- Loading state -->
-            <div class="loading-matches">
-                <div class="loading-spinner"></div>
-                Loading match history...
-            </div>
+        <div id="no-matches" class="no-matches" style="display: none;">
+            <p>No match history found. Play some games and come back later!</p>
         </div>
         
-        <!-- Pagination controls -->
-        <div class="pagination">
-            <!-- Pagination buttons will be inserted here by JavaScript -->
+        <div id="analyze-button-container" class="button-container" style="display: none;">
+            <button id="analyze-button" class="action-button">Analyze My Matches</button>
         </div>
     </div>
-    </div>
+</div>
     </div>
     
     <div class="footer">
         League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
     </div>
 </body>
-<script src="{{ url_for('static', filename='js/riotApi.js') }}"></script>
-<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-
+<script src="js/riotApi.js"></script>
+<script src="js/stats.js"></script>
 </html>
