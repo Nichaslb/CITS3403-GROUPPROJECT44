@@ -1,9 +1,17 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, User  # 导入models.py中的db和User
-from forms import LoginForm, RegisterForm
-from functools import wraps
+from datetime import datetime
 import os
+import requests
+import time
+from functools import wraps
+import logging
+from logging.handlers import RotatingFileHandler
+
+# 从models导入数据库模型
+from models import db, User, GameModeStats, MatchRecord
+from forms import LoginForm, RegisterForm
+from routes.riot_api import fetch_puuid, fetch_rank_info, fetch_match_list, fetch_match_details, get_api_key
 
 app = Flask(__name__, 
            template_folder='template',
@@ -15,6 +23,9 @@ app.config['SECRET_KEY'] = os.urandom(24)
 # 配置SQLAlchemy数据库
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# 设置Riot API密钥（如果需要从环境变量获取）
+app.config['RIOT_API_KEY'] = os.environ.get('RIOT_API_KEY', '')
 
 # 初始化数据库
 db.init_app(app)
@@ -133,16 +144,39 @@ def profile():
 @app.route('/update_profile', methods=['POST'])
 @login_required
 def update_profile():
-    # 使用ORM更新用户资料
+    # 获取表单数据
+    riot_id = request.form.get('riot_id', '')
+    tagline = request.form.get('tagline', '')
+    region = request.form.get('region', '')
+    
+    # 获取当前用户
     user = User.query.get(session['user_id'])
     
-    user.riot_id = request.form.get('riot_id', '')
-    user.tagline = request.form.get('tagline', '')
-    user.region = request.form.get('region', '')
+    # 检查Riot ID和tagline是否有变化
+    riot_id_changed = user.riot_id != riot_id
+    tagline_changed = user.tagline != tagline
+    
+    # 更新用户资料
+    user.riot_id = riot_id
+    user.tagline = tagline
+    user.region = region
+    
+    # 如果Riot ID或tagline有变化，且都不为空，则尝试获取新的PUUID
+    if (riot_id_changed or tagline_changed) and riot_id and tagline:
+        api_key = get_api_key()
+        if api_key:
+            result = fetch_puuid(riot_id, tagline, api_key)
+            if "puuid" in result:
+                # 更新用户的PUUID字段
+                user.puuid = result["puuid"]
+                flash('Riot账号已验证', 'success')
+            elif "error" in result:
+                flash(f'Riot账号信息验证失败: {result["error"]}', 'error')
+                # 仍然保存用户输入的信息，但提示验证失败
     
     db.session.commit()
     
-    flash('Profile updated', 'success')
+    flash('个人资料已更新', 'success')
     return redirect(url_for('profile'))
 
 @app.route('/share')
@@ -150,5 +184,254 @@ def update_profile():
 def share():
     return render_template('share.html')
 
+@app.route('/api/puuid')
+@login_required
+def api_get_puuid():
+    """获取当前登录用户的PUUID"""
+    user = User.query.get(session['user_id'])
+    if not user:
+        return jsonify({"status": "error", "message": "找不到用户信息"}), 404
+    
+    # 验证用户是否设置了riot_id和tagline
+    if not user.riot_id or not user.tagline:
+        return jsonify({
+            "status": "error", 
+            "message": "未设置Riot ID或Tagline，请先更新个人资料",
+            "needsUpdate": True
+        }), 400
+    
+    # 获取API密钥
+    api_key = get_api_key()
+    if not api_key:
+        return jsonify({"status": "error", "message": "无法获取API密钥"}), 500
+    
+    # 调用Riot API获取PUUID
+    result = fetch_puuid(user.riot_id, user.tagline, api_key)
+    
+    if "error" in result:
+        return jsonify({"status": "error", "message": result["error"]}), 400
+    
+    # 如果用户模型有PUUID字段，更新它
+    if hasattr(user, 'puuid'):
+        user.puuid = result.get("puuid")
+        db.session.commit()
+    
+    return jsonify({
+        "status": "success", 
+        "data": result
+    })
+
+# 添加一个API路由用于获取用户游戏数据
+@app.route('/api/game_profile')
+@login_required
+def api_game_profile():
+    """获取用户游戏资料，包括PUUID、段位信息等"""
+    user = User.query.get(session['user_id'])
+    if not user:
+        return jsonify({"status": "error", "message": "找不到用户信息"}), 404
+    
+    # 验证用户是否设置了riot_id和tagline
+    if not user.riot_id or not user.tagline:
+        return jsonify({
+            "status": "error", 
+            "message": "未设置Riot ID或Tagline，请先更新个人资料",
+            "needsUpdate": True
+        }), 400
+    
+    # 获取API密钥
+    api_key = get_api_key()
+    if not api_key:
+        return jsonify({"status": "error", "message": "无法获取API密钥"}), 500
+    
+    # 获取PUUID
+    puuid_result = fetch_puuid(user.riot_id, user.tagline, api_key)
+    if "error" in puuid_result:
+        return jsonify({"status": "error", "message": puuid_result["error"]}), 400
+    
+    puuid = puuid_result["puuid"]
+    
+    # 获取段位信息
+    rank_info = fetch_rank_info(puuid, api_key)
+    
+    # 获取最近的比赛列表
+    match_list = fetch_match_list(puuid, 5, api_key)
+    
+    # 返回组合数据
+    return jsonify({
+        "status": "success",
+        "data": {
+            "account": puuid_result,
+            "rank": rank_info if not isinstance(rank_info, dict) or "error" not in rank_info else None,
+            "matches": match_list if not isinstance(match_list, dict) or "error" not in match_list else []
+        }
+    })
+
+@app.route('/api/analyze_game_modes', methods=['POST'])
+@login_required
+def api_analyze_game_modes():
+    """触发分析当前用户最近30场对局的游戏模式"""
+    from routes.algorithm import analyze_game_modes
+    
+    user_id = session.get('user_id')
+    if not user_id:
+        print("用户未登录，无法分析游戏模式")
+        return jsonify({"status": "error", "message": "用户未登录"}), 401
+    
+    print(f"开始为用户 {user_id} 分析游戏模式")
+    result = analyze_game_modes(user_id)
+    print(f"游戏模式分析完成，状态: {result['status']}")
+    return jsonify(result)
+
+@app.route('/api/game_modes_stats')
+@login_required
+def api_game_modes_stats():
+    """获取当前用户的游戏模式统计数据"""
+    user_id = session.get('user_id')
+    if not user_id:
+        print("用户未登录，无法获取游戏模式统计")
+        return jsonify({"status": "error", "message": "用户未登录"}), 401
+    
+    print(f"正在查询用户 {user_id} 的游戏模式统计")
+    stats = GameModeStats.query.filter_by(user_id=user_id).first()
+    if not stats:
+        print(f"用户 {user_id} 尚未分析游戏模式数据")
+        return jsonify({
+            "status": "error", 
+            "message": "尚未分析游戏模式数据",
+            "needsAnalysis": True
+        }), 404
+    
+    # 检查数据是否过时
+    now = datetime.utcnow()
+    if (now - stats.last_updated).days > 1:  # 如果数据超过1天
+        print(f"用户 {user_id} 的游戏模式数据已过时，最后更新: {stats.last_updated}")
+        return jsonify({
+            "status": "success",
+            "data": {
+                "sr_5v5_percentage": stats.sr_5v5_percentage,
+                "aram_percentage": stats.aram_percentage,
+                "fun_modes_percentage": stats.fun_modes_percentage,
+                "bot_games_percentage": stats.bot_games_percentage,
+                "custom_percentage": stats.custom_percentage,
+                "unknown_percentage": stats.unknown_percentage,
+                "total_matches": stats.total_matches,
+                "last_updated": stats.last_updated.strftime("%Y-%m-%d %H:%M:%S")
+            },
+            "needsUpdate": True
+        })
+    
+    print(f"成功获取用户 {user_id} 的游戏模式统计，共 {stats.total_matches} 场比赛")
+    return jsonify({
+        "status": "success",
+        "data": {
+            "sr_5v5_percentage": stats.sr_5v5_percentage,
+            "aram_percentage": stats.aram_percentage,
+            "fun_modes_percentage": stats.fun_modes_percentage,
+            "bot_games_percentage": stats.bot_games_percentage,
+            "custom_percentage": stats.custom_percentage,
+            "unknown_percentage": stats.unknown_percentage,
+            "total_matches": stats.total_matches,
+            "last_updated": stats.last_updated.strftime("%Y-%m-%d %H:%M:%S")
+        }
+    })
+
+@app.route('/api/recent_matches')
+@login_required
+def api_recent_matches():
+    """获取用户最近的对局记录"""
+    user_id = session.get('user_id')
+    if not user_id:
+        print("用户未登录，无法获取最近对局")
+        return jsonify({"status": "error", "message": "用户未登录"}), 401
+    
+    print(f"正在查询用户 {user_id} 的最近对局记录")
+    # 获取最近30场对局记录
+    matches = MatchRecord.query.filter_by(user_id=user_id).order_by(MatchRecord.game_date.desc()).limit(30).all()
+    
+    match_list = [{
+        "match_id": match.match_id,
+        "queue_id": match.queue_id,
+        "game_mode": match.game_mode,
+        "category": match.game_category,
+        "date": match.game_date.strftime("%Y-%m-%d %H:%M:%S")
+    } for match in matches]
+    
+    print(f"成功获取用户 {user_id} 的 {len(match_list)} 场最近对局")
+    return jsonify({
+        "status": "success",
+        "data": match_list
+    })
+
 if __name__ == '__main__':
+    # 设置日志
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    file_handler = RotatingFileHandler('logs/app.log', maxBytes=10240, backupCount=10)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('Flask应用启动')
     app.run(debug=True)
+
+@app.route('/api/rank/<puuid>')
+@login_required
+def api_get_rank(puuid):
+    # 获取API密钥
+    api_key = get_api_key()
+    if not api_key:
+        return jsonify({"status": "error", "message": "无法获取API密钥"}), 500
+    
+    # 调用Riot API获取段位信息
+    rank_info = fetch_rank_info(puuid, api_key)
+    
+    if "error" in rank_info:
+        return jsonify({"status": "error", "message": rank_info["error"]}), 400
+    
+    return jsonify({
+        "status": "success", 
+        "data": rank_info
+    })
+
+@app.route('/api/matches/<puuid>')
+@login_required
+def api_get_matches(puuid):
+    # 获取查询参数
+    count = request.args.get('count', default=20, type=int)
+    
+    # 获取API密钥
+    api_key = get_api_key()
+    if not api_key:
+        return jsonify({"status": "error", "message": "无法获取API密钥"}), 500
+    
+    # 调用Riot API获取比赛列表
+    match_list = fetch_match_list(puuid, count, api_key)
+    
+    if isinstance(match_list, dict) and "error" in match_list:
+        return jsonify({"status": "error", "message": match_list["error"]}), 400
+    
+    return jsonify({
+        "status": "success", 
+        "data": match_list
+    })
+
+@app.route('/api/match/<match_id>')
+@login_required
+def api_get_match_details(match_id):
+    # 获取API密钥
+    api_key = get_api_key()
+    if not api_key:
+        return jsonify({"status": "error", "message": "无法获取API密钥"}), 500
+    
+    # 调用Riot API获取比赛详情
+    match_details = fetch_match_details(match_id, api_key)
+    
+    if isinstance(match_details, dict) and "error" in match_details:
+        return jsonify({"status": "error", "message": match_details["error"]}), 400
+    
+    return jsonify({
+        "status": "success", 
+        "data": match_details
+    })
