@@ -29,6 +29,13 @@
                     </div>
                     Share
                 </a>
+
+                <a href="{{ url_for('friends') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                    </div>
+                    Friends
+                </a>
             </div>
             <a href="{{ url_for('profile') }}" class="profile-button active">
                 <div class="profile-icon">
