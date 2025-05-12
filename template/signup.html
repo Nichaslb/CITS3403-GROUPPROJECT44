@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Registration</title>
     <link rel="stylesheet" href="../style/signup.css">
+    <link rel="stylesheet" href="/style/cursor.css">
 </head>
 <body>
     <div class="register-container">
@@ -13,38 +14,58 @@
             <p>Create your game account</p>
         </div>
         
-        <div class="register-form">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('register') }}" class="register-form">
             <div class="form-section">
                 <label class="form-label">Username</label>
-                <input type="text" class="form-input" placeholder="Enter your username">
+                <input type="text" name="username" class="form-input" placeholder="Enter your username" value="{{ request.form.username }}" required>
+                {% if form and form.username.errors %}
+                    <div class="error-message">{{ form.username.errors[0] }}</div>
+                {% endif %}
             </div>
             
             <div class="form-section">
                 <label class="form-label">Email</label>
-                <input type="email" class="form-input" placeholder="Enter your email address">
+                <input type="email" name="email" class="form-input" placeholder="Enter your email address" value="{{ request.form.email }}" required>
+                {% if form and form.email.errors %}
+                    <div class="error-message">{{ form.email.errors[0] }}</div>
+                {% endif %}
             </div>
             
             <div class="form-section">
                 <label class="form-label">Password</label>
-                <input type="password" class="form-input" placeholder="Enter your password">
+                <input type="password" name="password" class="form-input" placeholder="Enter your password" required>
+                {% if form and form.password.errors %}
+                    <div class="error-message">{{ form.password.errors[0] }}</div>
+                {% endif %}
             </div>
             
             <div class="form-section">
                 <label class="form-label">Confirm Password</label>
-                <input type="password" class="form-input" placeholder="Confirm your password">
+                <input type="password" name="confirm" class="form-input" placeholder="Confirm your password" required>
+                {% if form and form.confirm.errors %}
+                    <div class="error-message">{{ form.confirm.errors[0] }}</div>
+                {% endif %}
             </div>
             
             <div class="form-section">
                 <label class="form-label">Riot ID</label>
                 <div class="riot-id-container">
-                    <input type="text" class="form-input" placeholder="Enter your Riot ID">
-                    <input type="text" class="form-input" placeholder="#Tagline">
+                    <input type="text" name="riot_id" class="form-input" placeholder="Enter your Riot ID">
+                    <input type="text" name="tagline" class="form-input" placeholder="#Tagline">
                 </div>
             </div>
             
             <div class="form-section">
                 <label class="form-label">Region</label>
-                <select class="form-select">
+                <select name="region" class="form-select">
                     <option value="" disabled selected>Select your region</option>
                     <option value="asia">Asia</option>
                     <option value="europe">Europe</option>
@@ -53,16 +74,16 @@
                 </select>
             </div>
             
-            <a href="dashboard.html" class="register-btn">Create Account</a>
+            <button type="submit" class="register-btn">Create Account</button>
             
             <div class="login-link">
-                Already have an account? <a href="signin.html">Sign In</a>
+                Already have an account? <a href="{{ url_for('login') }}">Sign In</a>
             </div>
             
             <div class="terms">
                 By registering, you agree to our Terms of Service and Privacy Policy
             </div>
-        </div>
+        </form>
     </div>
 </body>
 </html>

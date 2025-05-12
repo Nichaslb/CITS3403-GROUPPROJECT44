@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="../style/signin.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/signin.css') }}">
+    <link rel="stylesheet" href="/style/cursor.css">
 </head>
 
 <body>
@@ -13,27 +14,39 @@
             <h1>Login</h1>
         </div>
         
-        <div class="login-form">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('login') }}" class="login-form">
             <div class="form-section">
                 <label class="form-label">username</label>
-                <input type="text" class="form-input" placeholder="username here">
+                <input type="text" name="username" class="form-input" placeholder="username here" value="{{ request.form.username }}" required>
+                {% if form and form.username.errors %}
+                    <div class="error-message">{{ form.username.errors[0] }}</div>
+                {% endif %}
             </div>
             
             <div class="form-section">
                 <label class="form-label">password</label>
-                <input type="password" class="form-input" placeholder="password here">
+                <input type="password" name="password" class="form-input" placeholder="password here" required>
+                {% if form and form.password.errors %}
+                    <div class="error-message">{{ form.password.errors[0] }}</div>
+                {% endif %}
             </div>
             
             <div class="remember-me">
-                <input type="checkbox" id="remember">
+                <input type="checkbox" id="remember" name="remember">
                 <label for="remember">Keep login for 3 days</label>
             </div>
             
-            <a href="dashboard.html"><button class="login-btn">Login</button></a>
-            <a href="signup.html"><button class="register-btn">New here? Sign Up here</button></a>
-            
-
-        </div>
+            <button type="submit" class="login-btn">Login</button>
+            <a href="{{ url_for('register') }}"><button type="button" class="register-btn">New here? Sign Up here</button></a>
+        </form>
     </div>
 </body>
 </html>
