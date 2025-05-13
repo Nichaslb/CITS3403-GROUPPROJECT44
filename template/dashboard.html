@@ -46,92 +46,200 @@
             </a>
         </div>
         
-        <!-- This is the HTML structure you should use to replace the content div in your dashboard.html file -->
+        <!-- 内容部分 -->
+        <div class="content">
+            <div class="welcome-header">
+                <h1>Hi, {{ session.username }}</h1>
+                <div id="riot-id" class="player-tag">Loading Riot ID...</div>
+                <!-- 红色方框区域添加分析按钮 -->
+                <div class="quick-analyze-button-container">
+                    <button id="quick-analyze-button" class="action-button">分析游戏数据</button>
+                </div>
+            </div>
+            
+            <!-- 加载和错误信息 -->
+            <div id="loading-stats" class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>Analyzing your match history...</p>
+            </div>
+            
+            <div id="error-stats" class="error-message" style="display: none;">
+                <p>Couldn't load your stats. Please make sure your Riot ID is set in your profile.</p>
+                <button id="retry-button" class="action-button">Retry</button>
+            </div>
+            
+            <div id="no-matches" class="no-matches" style="display: none;">
+                <p>No match history found. Play some games and come back later!</p>
+            </div>
+            
+<!-- 修改 dashboard.html 的 main-analysis-container 和 fun-stats-container -->
+<!-- 以下是新的结构建议，包含你的要求 -->
 
-        <!-- Content section for dashboard.html -->
-<!-- 修改后的content部分 -->
-<div class="content">
-    <div class="welcome-header">
-        <h1>Hi, {{ session.username }}</h1>
-        <div id="riot-id" class="player-tag">Loading Riot ID...</div>
+<!-- 紧凑美观对齐版 dashboard.html 分析区域布局 -->
+<div id="main-analysis-container" class="analysis-section" style="display: none;">
+    <h2>Your Recent Matches Analysis</h2>
+  
+    <!-- 第一行：4个小卡片 -->
+    <div class="analysis-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+      <div class="analysis-card">
+        <h3>Favorite Champion</h3>
+        <div id="favorite-champions-list" class="data-list"></div>
+      </div>
+      <div class="analysis-card">
+        <h3>Preferred Position</h3>
+        <div id="favorite-positions-list" class="data-list"></div>
+      </div>
+      <div class="analysis-card">
+        <h3>Frequent Ally</h3>
+        <div id="top-ally-champion" class="data-list"></div>
+      </div>
+      <div class="analysis-card">
+        <h3>Common Enemy</h3>
+        <div id="top-enemy-champion" class="data-list"></div>
+      </div>
+    </div>
+  
+    <!-- 第二行：3个中卡片，统一高度 -->
+    <div class="analysis-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+      <div class="analysis-card">
+        <h3>Multikill Stats</h3>
+        <div class="multikill-stats">
+          <div class="multikill-item">
+            <div class="multikill-label">Double</div>
+            <div id="double-kills" class="multikill-value">0</div>
+          </div>
+          <div class="multikill-item">
+            <div class="multikill-label">Triple</div>
+            <div id="triple-kills" class="multikill-value">0</div>
+          </div>
+          <div class="multikill-item">
+            <div class="multikill-label">Quadra</div>
+            <div id="quadra-kills" class="multikill-value">0</div>
+          </div>
+          <div class="multikill-item">
+            <div class="multikill-label">Penta</div>
+            <div id="penta-kills" class="multikill-value">0</div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="analysis-card">
+        <h3>Per Match Averages</h3>
+        <div class="multikill-stats" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="multikill-item">
+            <div class="multikill-label">Avg Damage</div>
+            <div id="avg-damage" class="multikill-value" style="color: #4ade80;">0</div>
+          </div>
+          <div class="multikill-item">
+            <div class="multikill-label">Avg Vision</div>
+            <div id="avg-vision" class="multikill-value" style="color: #4ade80;">0</div>
+          </div>
+          <div class="multikill-item">
+            <div class="multikill-label">Avg KDA</div>
+            <div id="avg-kda" class="multikill-value" style="color: #4ade80;">0</div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="analysis-card">
+        <h3>Game Modes</h3>
+        <div class="game-modes-stats">
+          <div class="mode-item">
+            <div class="mode-name">5v5</div>
+            <div class="stat-percentage">
+              <div id="sr-percentage" class="percentage-value">0%</div>
+              <div class="percentage-bar">
+                <div id="sr-bar" class="percentage-fill sr-fill"></div>
+              </div>
+            </div>
+          </div>
+          <div class="mode-item">
+            <div class="mode-name">ARAM</div>
+            <div class="stat-percentage">
+              <div id="aram-percentage" class="percentage-value">0%</div>
+              <div class="percentage-bar">
+                <div id="aram-bar" class="percentage-fill aram-fill"></div>
+              </div>
+            </div>
+          </div>
+          <div class="mode-item">
+            <div class="mode-name">Fun</div>
+            <div class="stat-percentage">
+              <div id="fun-percentage" class="percentage-value">0%</div>
+              <div class="percentage-bar">
+                <div id="fun-bar" class="percentage-fill fun-fill"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 趣味数据部分保持 4栏结构不动 -->
+  <div id="fun-stats-container" class="fun-stats-section" style="display: none;">
+    <h2>Fun Totals</h2>
+    <div class="fun-stats-grid">
+      <div class="fun-stat-card">
+        <div class="fun-stat-icon">💰</div>
+        <div class="fun-stat-info">
+          <div class="fun-stat-title">Total Gold</div>
+          <div id="total-gold" class="fun-stat-value">0</div>
+        </div>
+      </div>
+  
+      <div class="fun-stat-card">
+        <div class="fun-stat-icon">🔥</div>
+        <div class="fun-stat-info">
+          <div class="fun-stat-title">Total Damage</div>
+          <div id="total-damage" class="fun-stat-value">0</div>
+        </div>
+      </div>
+  
+      <div class="fun-stat-card">
+        <div class="fun-stat-icon">🛡️</div>
+        <div class="fun-stat-info">
+          <div class="fun-stat-title">Total Damage Taken</div>
+          <div id="total-damage-taken" class="fun-stat-value">0</div>
+        </div>
+      </div>
+  
+      <div class="fun-stat-card">
+        <div class="fun-stat-icon">🧤</div>
+        <div class="fun-stat-info">
+          <div class="fun-stat-title">Items Purchased</div>
+          <div id="total-items" class="fun-stat-value">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+            
+            <!-- 分析按钮容器 -->
+            <div id="analyze-button-container" class="button-container" style="display: none;">
+                <button id="analyze-button" class="action-button">Analyze My Matches</button>
+            </div>
+        </div>
     </div>
     
-    <!-- 游戏模式统计卡片 -->
-    <div class="stats-card">
-        <h2>Your Recent 30 Matches Analysis</h2>
-        
-        <div id="loading-stats" class="loading-container">
-            <div class="loading-spinner"></div>
-            <p>Analyzing your match history...</p>
-        </div>
-        
-        <div id="error-stats" class="error-message" style="display: none;">
-            <p>Couldn't load your stats. Please make sure your Riot ID is set in your profile.</p>
-            <button id="retry-button" class="action-button">Retry</button>
-        </div>
-        
-        <div id="stats-container" class="stats-grid" style="display: none;">
-            <div class="stat-card sr-card">
-                <div class="stat-icon">
-                    <img src="{{ url_for('static', filename='assets/icons/5v5.png') }}" alt="Summoner's Rift">
-                </div>
-                <div class="stat-info">
-                    <h3>Summoner's Rift (5v5)</h3>
-                    <div class="stat-percentage">
-                        <div id="sr-percentage" class="percentage-value">0%</div>
-                        <div class="percentage-bar">
-                            <div id="sr-bar" class="percentage-fill" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="stat-card aram-card">
-                <div class="stat-icon">
-                    <img src="{{ url_for('static', filename='assets/icons/aram.png') }}" alt="ARAM">
-                </div>
-                <div class="stat-info">
-                    <h3>ARAM</h3>
-                    <div class="stat-percentage">
-                        <div id="aram-percentage" class="percentage-value">0%</div>
-                        <div class="percentage-bar">
-                            <div id="aram-bar" class="percentage-fill" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="stat-card fun-card">
-                <div class="stat-icon">
-                    <img src="{{ url_for('static', filename='assets/icons/fun.png') }}" alt="Fun Modes">
-                </div>
-                <div class="stat-info">
-                    <h3>Fun Modes</h3>
-                    <div class="stat-percentage">
-                        <div id="fun-percentage" class="percentage-value">0%</div>
-                        <div class="percentage-bar">
-                            <div id="fun-bar" class="percentage-fill" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
+    <!-- 弹出确认对话框 -->
+    <div id="analyze-confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">确认分析</div>
+            <div id="modal-message" class="modal-message">仅在需要分析的时候进行分析。确定要立即分析您的游戏数据吗？</div>
+            <div class="modal-buttons">
+                <button id="cancel-analyze-button" class="modal-button modal-cancel">取消</button>
+                <button id="confirm-analyze-button" class="modal-button modal-confirm">确认分析</button>
             </div>
         </div>
-        
-        <div id="no-matches" class="no-matches" style="display: none;">
-            <p>No match history found. Play some games and come back later!</p>
-        </div>
-        
-        <div id="analyze-button-container" class="button-container" style="display: none;">
-            <button id="analyze-button" class="action-button">Analyze My Matches</button>
-        </div>
-    </div>
-</div>
     </div>
     
     <div class="footer">
         League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
     </div>
 </body>
-<script src="js/riotApi.js"></script>
-<script src="js/stats.js"></script>
+
+<script src="{{ url_for('static', filename='js/stats.js') }}"></script>
 </html>

@@ -8,7 +8,7 @@ from functools import wraps
 from flask_migrate import Migrate
 
 # 从models导入数据库模型
-from models import db, User, GameModeStats, MatchRecord, Friend  # 确保从models导入Friend
+from models import db, User, GameModeStats, MatchRecord, Friend,DetailedAnalysis
 from forms import LoginForm, RegisterForm
 from routes.riot_api import fetch_puuid, fetch_rank_info, fetch_match_list, fetch_match_details, get_api_key
 
@@ -289,15 +289,159 @@ def api_analyze_game_modes():
         print("用户未登录，无法分析游戏模式")
         return jsonify({"status": "error", "message": "用户未登录"}), 401
     
+    # 移除冷却检查代码，直接执行分析
     print(f"开始为用户 {user_id} 分析游戏模式")
     result = analyze_game_modes(user_id)
     print(f"游戏模式分析完成，状态: {result['status']}")
+    
+    # 如果分析成功，保存详细分析数据到数据库
+    if result['status'] == 'success' and 'data' in result and 'detailed_analysis' in result['data']:
+        detailed = result['data']['detailed_analysis']
+        
+        # 查询现有的详细分析数据或创建新记录
+        analysis = DetailedAnalysis.query.filter_by(user_id=user_id).first()
+        if not analysis:
+            analysis = DetailedAnalysis(user_id=user_id)
+        
+        # 更新详细分析数据
+        # 最喜欢的英雄和位置
+        analysis.favorite_champions = detailed['favorite_champions']
+        analysis.favorite_positions = detailed['favorite_positions']
+        
+        # 多杀统计
+        analysis.double_kills = detailed['multikill_stats']['doubles']
+        analysis.triple_kills = detailed['multikill_stats']['triples'] 
+        analysis.quadra_kills = detailed['multikill_stats']['quadras']
+        analysis.penta_kills = detailed['multikill_stats']['pentas']
+        analysis.total_multikills = detailed['multikill_stats']['total']
+        analysis.avg_multikills_per_match = detailed['multikill_stats']['average']
+        
+        # 趣味数据
+        analysis.total_gold_earned = detailed['fun_stats']['total_gold_earned']
+        analysis.avg_gold_per_match = detailed['fun_stats'].get('avg_gold_per_match', 0)
+        analysis.total_kills = detailed['fun_stats']['total_kills']
+        analysis.total_deaths = detailed['fun_stats']['total_deaths']
+        analysis.total_assists = detailed['fun_stats']['total_assists']
+        analysis.avg_kills_per_match = detailed['fun_stats'].get('avg_kills_per_match', 0)
+        analysis.avg_deaths_per_match = detailed['fun_stats'].get('avg_deaths_per_match', 0)
+        analysis.avg_assists_per_match = detailed['fun_stats'].get('avg_assists_per_match', 0)
+        analysis.avg_kda = detailed['fun_stats'].get('avg_kda', 0)
+        analysis.total_vision_score = detailed['fun_stats'].get('total_vision_score', 0)
+        analysis.avg_vision_score = detailed['fun_stats'].get('avg_vision_score', 0)
+        analysis.total_damage_dealt = detailed['fun_stats'].get('total_damage_dealt_to_champions', 0)
+        analysis.avg_damage_per_match = detailed['fun_stats'].get('avg_damage_per_match', 0)
+        
+        # 敌方和己方英雄数据
+        if 'enemy_champions' in detailed:
+            analysis.enemy_champions = detailed['enemy_champions']
+        if 'ally_champions' in detailed:
+            analysis.ally_champions = detailed['ally_champions']
+        
+        analysis.last_updated = datetime.utcnow()
+        
+        # 保存到数据库
+        db.session.add(analysis)
+        db.session.commit()
+        print(f"已保存用户 {user_id} 的详细分析数据")
+    
     return jsonify(result)
+
+def build_simplified_analysis(user_id, matches):
+    """
+    基于数据库中已有的比赛记录构建简化版的分析数据
+    这个函数不会调用Riot API，仅使用已保存的数据
+    """
+    # 初始化分析数据结构
+    analysis = {
+        "favorite_champions": {},
+        "favorite_positions": {},
+        "multikill_stats": {
+            "doubles": 0,
+            "triples": 0,
+            "quadras": 0,
+            "pentas": 0,
+            "total": 0,
+            "average": 0
+        },
+        "fun_stats": {
+            "total_gold_earned": 0,
+            "avg_gold_per_match": 0,
+            "total_kills": 0,
+            "total_deaths": 0,
+            "total_assists": 0,
+            "avg_kills_per_match": 0,
+            "avg_deaths_per_match": 0,
+            "avg_assists_per_match": 0,
+            "avg_kda": 0,
+            "total_vision_score": 0,
+            "avg_vision_score": 0,
+            "total_damage_dealt_to_champions": 0,
+            "avg_damage_per_match": 0
+        }
+    }
+    
+    # 尝试查找是否有详细分析数据
+    detailed = DetailedAnalysis.query.filter_by(user_id=user_id).first()
+    if detailed:
+        # 使用数据库中的详细分析数据
+        analysis["favorite_champions"] = detailed.favorite_champions
+        analysis["favorite_positions"] = detailed.favorite_positions
+        analysis["multikill_stats"] = {
+            "doubles": detailed.double_kills,
+            "triples": detailed.triple_kills,
+            "quadras": detailed.quadra_kills,
+            "pentas": detailed.penta_kills,
+            "total": detailed.total_multikills,
+            "average": detailed.avg_multikills_per_match
+        }
+        analysis["fun_stats"] = {
+            "total_gold_earned": detailed.total_gold_earned,
+            "avg_gold_per_match": detailed.avg_gold_per_match,
+            "total_kills": detailed.total_kills,
+            "total_deaths": detailed.total_deaths,
+            "total_assists": detailed.total_assists,
+            "avg_kills_per_match": detailed.avg_kills_per_match,
+            "avg_deaths_per_match": detailed.avg_deaths_per_match,
+            "avg_assists_per_match": detailed.avg_assists_per_match,
+            "avg_kda": detailed.avg_kda,
+            "total_vision_score": detailed.total_vision_score,
+            "avg_vision_score": detailed.avg_vision_score,
+            "total_damage_dealt_to_champions": detailed.total_damage_dealt,
+            "avg_damage_per_match": detailed.avg_damage_per_match
+        }
+        
+        # 如果有敌方和己方英雄数据，也添加进去
+        if hasattr(detailed, 'enemy_champions') and detailed.enemy_champions:
+            analysis["enemy_champions"] = detailed.enemy_champions
+        if hasattr(detailed, 'ally_champions') and detailed.ally_champions:
+            analysis["ally_champions"] = detailed.ally_champions
+            
+        return analysis
+    
+    # 如果数据库中没有详细分析，可以返回示例数据
+    if not matches or len(matches) == 0:
+        # 添加一些示例数据
+        popular_champions = {
+            "未知英雄": 0
+        }
+        positions = {
+            "未知位置": 0
+        }
+    else:
+        # 尝试从match记录中提取一些基本信息
+        # 这里只是一个简化版，无法获取详细的游戏数据
+        popular_champions = {"未知英雄": len(matches)}
+        positions = {"未知位置": len(matches)}
+    
+    analysis["favorite_champions"] = popular_champions
+    analysis["favorite_positions"] = positions
+    
+    return analysis
 
 @app.route('/api/game_modes_stats')
 @login_required
 def api_game_modes_stats():
-    """获取当前用户的游戏模式统计数据"""
+    """获取当前用户的游戏模式统计数据和详细分析"""
     user_id = session.get('user_id')
     if not user_id:
         print("用户未登录，无法获取游戏模式统计")
@@ -313,6 +457,49 @@ def api_game_modes_stats():
             "needsAnalysis": True
         }), 404
     
+    # 获取详细分析数据
+    detailed_analysis = DetailedAnalysis.query.filter_by(user_id=user_id).first()
+    
+    # 构建详细分析数据结构
+    detailed_data = None
+    if detailed_analysis:
+        detailed_data = {
+            "favorite_champions": detailed_analysis.favorite_champions,
+            "favorite_positions": detailed_analysis.favorite_positions,
+            "multikill_stats": {
+                "doubles": detailed_analysis.double_kills,
+                "triples": detailed_analysis.triple_kills,
+                "quadras": detailed_analysis.quadra_kills,
+                "pentas": detailed_analysis.penta_kills,
+                "total": detailed_analysis.total_multikills,
+                "average": detailed_analysis.avg_multikills_per_match
+            },
+            "fun_stats": {
+                "total_gold_earned": detailed_analysis.total_gold_earned,
+                "avg_gold_per_match": detailed_analysis.avg_gold_per_match,
+                "total_kills": detailed_analysis.total_kills,
+                "total_deaths": detailed_analysis.total_deaths,
+                "total_assists": detailed_analysis.total_assists,
+                "avg_kills_per_match": detailed_analysis.avg_kills_per_match,
+                "avg_deaths_per_match": detailed_analysis.avg_deaths_per_match,
+                "avg_assists_per_match": detailed_analysis.avg_assists_per_match,
+                "avg_kda": detailed_analysis.avg_kda,
+                "total_vision_score": detailed_analysis.total_vision_score,
+                "avg_vision_score": detailed_analysis.avg_vision_score,
+                "total_damage_dealt_to_champions": detailed_analysis.total_damage_dealt,
+                "avg_damage_per_match": detailed_analysis.avg_damage_per_match
+            }
+        }
+        
+        # 如果有敌方和己方英雄数据，也添加进去
+        if detailed_analysis.enemy_champions:
+            detailed_data["enemy_champions"] = detailed_analysis.enemy_champions
+        if detailed_analysis.ally_champions:
+            detailed_data["ally_champions"] = detailed_analysis.ally_champions
+    else:
+        # 如果没有详细分析数据，创建一个简化版的空结构
+        detailed_data = build_simplified_analysis(user_id, [])
+    
     # 检查数据是否过时
     now = datetime.utcnow()
     if (now - stats.last_updated).days > 1:  # 如果数据超过1天
@@ -327,7 +514,8 @@ def api_game_modes_stats():
                 "custom_percentage": stats.custom_percentage,
                 "unknown_percentage": stats.unknown_percentage,
                 "total_matches": stats.total_matches,
-                "last_updated": stats.last_updated.strftime("%Y-%m-%d %H:%M:%S")
+                "last_updated": stats.last_updated.strftime("%Y-%m-%d %H:%M:%S"),
+                "detailed_analysis": detailed_data
             },
             "needsUpdate": True
         })
@@ -343,7 +531,8 @@ def api_game_modes_stats():
             "custom_percentage": stats.custom_percentage,
             "unknown_percentage": stats.unknown_percentage,
             "total_matches": stats.total_matches,
-            "last_updated": stats.last_updated.strftime("%Y-%m-%d %H:%M:%S")
+            "last_updated": stats.last_updated.strftime("%Y-%m-%d %H:%M:%S"),
+            "detailed_analysis": detailed_data
         }
     })
 
@@ -529,6 +718,18 @@ def api_remove_friend():
     return jsonify({
         "status": "success",
         "message": f"已从好友列表中移除 {friend_username}"
+    })
+
+@app.route('/api/can_analyze')
+@login_required
+def api_can_analyze():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"status": "error", "message": "用户未登录"}), 401
+    return jsonify({
+        "status": "success",
+        "canAnalyze": True,
+        "message": "可以进行分析"
     })
 
 if __name__ == '__main__':
