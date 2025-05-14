@@ -3,10 +3,10 @@ import os
 from flask import current_app
 import urllib.parse
 
-# 获取API KEY
+# 获取API KEY // Get API KEY
 def get_api_key():
     try:
-        # 从GitHub Gist获取API KEY
+        # 从GitHub Gist获取API KEY // Get API KEY from GitHub Gist
         response = requests.get("https://gist.githubusercontent.com/Choukaretsu/1e1676e2b1ac3acfad4553686f5db66c/raw")
         if response.status_code == 200:
             api_key = response.text.strip()
@@ -18,7 +18,7 @@ def get_api_key():
         current_app.logger.error(f"获取API KEY出错: {str(e)}")
         return None
 
-# 获取Riot API请求头
+# 获取Riot API请求头 // Get Riot API request headers
 def get_riot_headers(api_key):
     return {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -28,14 +28,14 @@ def get_riot_headers(api_key):
         "X-Riot-Token": api_key
     }
 
-# 获取玩家PUUID
+# 获取玩家PUUID // Get player PUUID
 def fetch_puuid(game_name, tag_line, api_key=None):
     if not api_key:
         api_key = get_api_key()
         if not api_key:
             return {"error": "无法获取API密钥"}
     
-    # URL编码游戏名和标签
+    # URL编码游戏名和标签 // URL encode game name and tag line
     encoded_game_name = urllib.parse.quote(game_name)
     encoded_tag_line = urllib.parse.quote(tag_line)
     
@@ -64,7 +64,7 @@ def fetch_puuid(game_name, tag_line, api_key=None):
         current_app.logger.error(f"获取PUUID出错: {str(e)}")
         return {"error": f"获取PUUID出错: {str(e)}"}
 
-# 获取段位信息
+# 获取段位信息 // Get rank information
 def fetch_rank_info(puuid, api_key=None):
     if not api_key:
         api_key = get_api_key()
@@ -83,7 +83,7 @@ def fetch_rank_info(puuid, api_key=None):
         current_app.logger.error(f"获取段位信息出错: {str(e)}")
         return {"error": f"获取段位信息出错: {str(e)}"}
 
-# 获取比赛ID列表
+# 获取比赛ID列表 // Get match ID list
 def fetch_match_list(puuid, count=20, api_key=None):
     if not api_key:
         api_key = get_api_key()
@@ -102,7 +102,7 @@ def fetch_match_list(puuid, count=20, api_key=None):
         current_app.logger.error(f"获取比赛ID列表出错: {str(e)}")
         return {"error": f"获取比赛ID列表出错: {str(e)}"}
 
-# 获取比赛详情
+# 获取比赛详情 // Get match details
 def fetch_match_details(match_id, api_key=None):
     if not api_key:
         api_key = get_api_key()
