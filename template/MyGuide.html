@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>League of Stats - Dashboard</title>
-    <link rel="stylesheet" href="../style/mainpage.css">
-    <link rel="stylesheet" href="../style/guide.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/cursor.css') }}">
+    <link rel="stylesheet" href="static/style/mainpage.css">
+    <link rel="stylesheet" href="static/style/guide.css">
+    <link rel="stylesheet" href="static/style/cursor.css">
 
 </head>
 
@@ -24,7 +24,7 @@
                     </div>
                     Dashboard
                 </a>
-                <a href="characters.html">
+                <a href="characters.html" class="active">
                     <div class="icon-placeholder">
                         <img src="../assets/icons/characters.png" alt="characters Icon">
                     </div>
@@ -44,7 +44,7 @@
                     Share
                 </a>
 
-                <a href="Guide.html" class="active">
+                <a href="Guide.html" >
                     <div class="icon-placeholder">
                         <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
                     </div>
@@ -62,13 +62,6 @@
         </div>
 
 
-        <a href="ShareGuide.html" class="ShareGuide"> <!-- Here we should be able to share-->
-            <h3> Share your guide! </h3>
-        </a>
-
-
-
-
 
 
     <div class="footer">
@@ -76,4 +69,6 @@
     </div>
 
 </body>
+
+
 </html>
