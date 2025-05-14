@@ -1,6 +1,6 @@
 # CITS3403
 
-League of Stats is a League of Legends statistics and analysis hub designed to give players deeper insights into the game.
+League of Stats is a League of Legends statistics and analysis hub designed to give players deeper insights into the game. The application combines account data, player performance statistics, champion information, and user-created guides to provide an all-in-one experience for casual and competitive players alike.
 
 ### Users can:
 
