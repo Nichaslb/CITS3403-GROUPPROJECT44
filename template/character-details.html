@@ -59,7 +59,7 @@
     </div>
 
 
-  <div id="character-detail" class="detail">
+  <div id="detail-character" class="detail">
     <button onclick="closeDetail()">✖ Close</button>
 
     <div id="detail-content">
@@ -68,209 +68,100 @@
   </div>
 
   <script>
-    const characters = [
-      { id: 1, 
-        name: 'Aatrox', 
-        backgroundImage:'../assets/wallpaper/Aatroxbg.png', 
-        icon: '../assets/characterimage/Aatrox_Render.png', 
-        HP: '590 – 2358',
-        HP5: '2.5 – 12.7', AR: '21 – 92.4',
-        MR: '30 – 52.1', MS: '330', MP: '418 – 843',MP5: '8-21.6', AD: '53 – 104',
-        CritDMG: '175%', AttackRange: '550',
-        BaseAS: '0.668', Windup: '20%',
-        ASratio: '0.625', BonusAS: '0 – 37.4%', Missilespeed: '1750',
-        Gameplayradius: '65', Selectradius: '100', Pathingradius: '35',
-        Selectheight: '135', Acqradius: '525',
-        lore: '“I must destroy even hope…"<br> ~ Aatrox.<br><br>Once honored defenders of Shurima against the Void, Aatrox and his brethren would eventually become an even greater threat to Runeterra, and were defeated only by cunning mortal sorcery. But after centuries of imprisonment, Aatrox was the first to find freedom once more, corrupting and transforming those foolish enough to try and wield the magical weapon that contained his essence. Now, with stolen flesh, he walks Runeterra in a brutal approximation of his previous form, seeking an apocalyptic and long overdue vengeance.' },
+function renderCharacter(character) {
+  const content = document.getElementById('detail-character');
 
-      { id: 2, 
-        name: 'Ahri', 
-        backgroundImage: '../assets/wallpaper/Ahribg.png',
-        icon: '../assets/characterimage/Ahri.png', 
-        HP: '590-2358', HP5: '2.5-12.7', AR: '21-92.5', MR:'30-52.1', MS: '345', Resource: 'N/A', ResourceRegen: 'N/A', AD: '60-145', CritDMG: '175%', AttackRange: '175',
-        BaseAS: '0.651', Windup: '19.737%', ASratio: 'N/A', BonusAS: '0-42.5%', 
-        GameplayRadius: '65', PathingRadius: '35', AcqRadius: '475', SelectRadius: '135', SelectHeight: '180',
-        lore: "Ahri is a Vastaya of vast beauty and mystic power, drawing essence from the lives of others. Born with a deep connection to latent magic, she manipulates emotions and memories to survive. Once feral, she learned to control her gifts and now wanders Runeterra in search of truth about her origin. Though she consumes life essence, she no longer does so without conscience. Ahri's journey is one of balance between predator and protector, seeking identity and redemption. With charm and deadly magic, she glides through battles, her foxfire spells whispering the weight of countless stolen fragments of soul." },
-
-      { id: 3,
-        name: 'Akali',
-        backgroundImage: '../assets/wallpaper/Akalibg.png',
-        icon: '../assets/characterimage/Akali_Render.png',
-        HP: '600 – 2623', HP5: '9 – 24.3', AR: '23 – 102.9', MR: '37 – 71.85', MS: '345', Resource: 'N/A', ResourceRegen: 'N/A', AD: '62 – 118.1',
-        CritDMG: '175%', AttackRange: '125', Energy: '200', EnergyRegen: '50', BaseAS: '0.625', Windup: '13.9%', ASratio: 'N/A', BonusAS: '0 – 54.4%',
-        GameplayRadius: '65', SelectRadius: '100', PathingRadius: '30', SelectHeight: '139', AcqRadius: '400', 
-        lore: 'Trained as a Kinkou assassin, Akali walked away from her order to pursue justice by her own hand. Believing the Kinkou’s balanced approach was too passive, she now strikes from the shadows as a rogue vigilante. Armed with her kama and shurikens, she delivers swift judgment against those who threaten Ionia. Akali’s silent fury is unmatched, blending traditional teachings with a brutal personal edge. Though estranged from her mentor Shen, she still honors the discipline he taught her. Her war is personal, and her presence is a deadly promise—those who bring harm to her land will vanish without a trace.' },
-
-        {id: 4,
-        name: 'Akshan',
-        backgroundImage: '../assets/wallpaper/Akshanbg.png',
-        icon: '../assets/characterimage/Akshan_Render.png',
-        HP: '600 – 2449', HP5: '3.75 – 14.8', AR: '26 – 105.9', MR: '30 – 52.1', MS: '330', Resource: 'N/A', ResourceRegen: 'N/A', AD: '62 – 118.1',
-        CritDMG: '175%', AttackRange: '500', Energy: '200', EnergyRegen: '50', BaseAS: '0.638', Windup: '13.33%', ASratio: '0.4', BonusAS: '0 – 68%',
-        GameplayRadius: '65', SelectRadius: '100', PathingRadius: '35', SelectHeight: '100', AcqRadius: '750',
-        lore: 'Akshan is a daring sentinel and rogue marksman who fights evil with charm, wit, and a sacred weapon that defies death. Trained by the Sentinels of Light, he walks a personal path of justice, targeting villains who prey on the innocent. After the murder of his mentor and adoptive mother, he was gifted a magical relic gun capable of resurrecting the slain—if their killer dies first. Akshan blends stealth, acrobatics, and moral rebellion to defy traditional heroism. He doesn’t wait for justice to come—he delivers it stylishly, swinging through Runeterra’s shadows as a lone avenger who rewrites fate with every shot.' },
-        
-        {id: 5,
-        name: 'Alistar',  backgroundImage: '../assets/wallpaper/Alistarbg.png',
-        icon: '../assets/characterimage/Alistar_Render.png', HP: '600 – 2725',HP5: '8.5 – 22.95', AR: '47 – 126.9', MR: '32 – 66.85', MS: '330', Resource: 'N/A', ResourceRegen: 'N/A', AD: '62 – 125.75',  
-        MR: '32 – 66.85', CritDMG: '175%', AttackRange: '125', Energy: '200', EnergyRegen: '50', BaseAS: '0.625', Windup: '30%', ASratio: 'N/A', BonusAS: '0 – 36.13%',
-        GameplayRadius: '80', SelectRadius: '140', PathingRadius: '50', SelectHeight: '170', AcqRadius: '600',
-        lore: 'A mighty Minotaur enslaved and forced to fight in Noxian arenas, Alistar was once a symbol of brutal strength. Through rage and sorrow, he became a legend of resistance. Freed by a young girl, he swore never to be a pawn again. Now, Alistar wanders as a protector of the downtrodden, using his strength to defend the weak and break chains wherever he finds them. Though haunted by memories of his slaughtered tribe, he channels his pain into fury against oppressors. He fights not for glory, but for redemption and peace, hoping to atone for the blood spilled during his enslavement.' },
-
-        {id: 6,
-        name: 'Ambessa', backgroundImage: '../assets/wallpaper/Ambessabg.png', icon: '../assets/characterimage/Ambessa_Render.png',
-        HP: '600 – 2500', HP5: '8.5 – 21.25', AR: '35 – 118.3', MR: '32 – 66.85', MS: '335', Resource: 'N/A', ResourceRegen: 'N/A', AD: '63 – 114',
-        CritDMG: '175%', AttackRange: '125', Energy: '200', EnergyRegen: '50', BaseAS: '0.625', Windup: '15.625%', ASratio: 'N/A', BonusAS: '0 – 42.5%', GameplayRadius: '65',
-        SelectRadius: '100', PathingRadius: '35', SelectHeight: '100', AcqRadius: '600',
-        lore: 'Ambessa Medarda is a ruthless Noxian warlord and a powerful political figure, known for her brutal strategies and uncompromising vision of strength. As a high-ranking member of Noxus’s ruling elite, she believes in conquest through power and discipline. Ambessa is also the estranged mother of Mel Medarda, a councilor in Piltover, with whom she shares a tense and complex relationship. Cold and calculating, Ambessa respects results over sentiment, often clashing with softer ideals. Her arrival in Piltover signals rising tensions, as her presence threatens to drag the city into the harsh realities of Noxian warfare and imperial ambition.' },
-
-        {id: 7,
-        name: 'Amumu', backgroundImage: '../assets/wallpaper/Amumubg.png', icon: '../assets/characterimage/Amumu_Render.png',
-        HP: '685-2283', HP5: '7.4-16.75', AR: '33-101', MR: '32-66.85', MS: '335', Resource: 'N/A', ResourceRegen: 'N/A', AD: '57-121.6',
-        CritDMG: '175%', AttackRange: '125', Energy: '200', EnergyRegen: '50', BaseAS: '0.736', Windup: '23.384%', ASratio: '0.638', BonusAS: '0-37.06%',
-        GameplayRadius: '65', SelectRadius: '100', PathingRadius: '30', SelectHeight: '130', AcqRadius: '600',
-        lore: 'Amumu, the Sad Mummy, wanders the world in eternal sorrow. Cursed with loneliness and misfortune, he longs for friendship but brings despair to all he touches. Myths conflict on his origin—some claim he was a Shuriman prince, others say he’s an undead soul bound by ancient magic. Driven by the aching need for connection, he searches endlessly for someone to understand his pain. Yet every encounter ends in heartbreak. Wrapped in bandages and tears, Amumu is not a monster, but a child seeking love in a world that recoils from him. His tragedy is timeless, his sadness unending.' },
-
-        {id: 8,
-        name: 'Anivia', backgroundImage: '../assets/wallpaper/Aniviabg.png', icon: '../assets/characterimage/Anivia_Render.png',
-        HP: '600 – 2460', HP5: '6.5 – 16.5', AR: '21 – 97.5', MR: '30 – 52.1', MS: '325', Resource: 'N/A', ResourceRegen: 'N/A', AD: '50 – 100',
-        CritDMG: '175%', AttackRange: '600', Energy: '200', EnergyRegen: '50', BaseAS: '0.625', Windup: '20%', ASratio: 'N/A', BonusAS: '0 – 28.56%', 
-        GameplayRadius: '65', SelectRadius: '100', PathingRadius: '35', SelectHeight: '140', AcqRadius: '600',
-        lore: 'Anivia is the ancient Freljordian spirit of rebirth and protector of the land’s natural cycles. A demi-god in avian form, she embodies the harsh yet renewing power of ice. From the time before mortals, she has risen from death countless times to defend the Freljord against threats like the Watchers. Her very presence reshapes battlefields—storms rage and ice forms at her will. More than a guardian, she is a symbol of endurance and hope in the frozen North. Each death fuels her next rise, for Anivia’s sacrifice ensures life continues through the cold, and that the Freljord never falls.' },
-
-        {id: 9,
-        name: 'Annie', backgroundImage: '../assets/wallpaper/Anniebg.png', icon: '../assets/characterimage/Annie_Render.png',
-        HP: '560 – 2192', HP5: '5.5 – 14.85', AR: '19 – 98.9', MR: '30 – 52.1', MS: '335', Resource: 'N/A', ResourceRegen: 'N/A', AD: '50 – 95.05',
-        CritDMG: '175%', AttackRange: '625', Energy: '200', EnergyRegen: '50', BaseAS: '0.625', Windup: '19.579%', ASratio: '0.625', BonusAS: '0 – 23.12%',
-        GameplayRadius: '55', SelectRadius: '100', PathingRadius: '30', SelectHeight: '85', AcqRadius: '625',
-        lore: 'Annie is a child sorceress of immense pyromantic power, born in the dark wilds of Noxus. Gifted—or cursed—with uncontrolled magic from infancy, she grew up isolated, her only constant companion being Tibbers, her enchanted teddy bear imbued with fiery might. After tragic losses and abandonment, Annie learned to survive alone, her powers becoming increasingly volatile. Though she appears innocent, her emotions—especially grief or anger—can trigger cataclysmic eruptions of flame. Annie roams the world as a lost child, both victim and weapon. Her laughter echoes through charred ruins, a haunting reminder of the raw, untamed potential lurking behind her sweet smile.'},
-          
-        {id: 10,
-        name: 'Aphelios', backgroundImage: '../assets/wallpaper/Apheliosbg.png', icon: '../assets/characterimage/Aphelios_Render.png',
-        HP: '600-2334' , HP5: '3.25-12.6', AR: '26-97.4', MR: '30-52.1', MS: '325', Resource: 'N/A', ResourceRegen: 'N/A', AD: '55-94.1',
-        CritDMG: '175%', AttackRange: '550', Energy: '200', EnergyRegen: '50', BaseAS: '0.64', Windup: '15.333%', ASratio: '0.658', BonusAS: '0-35.7%',
-        MP: '348-1062', MP5: '6.5-13.3',
-        GameplayRadius: '65', SelectRadius: '100', PathingRadius: '35', SelectHeight: '140', AcqRadius: '750',
-        lore: 'Aphelios is a mute assassin of the Lunari, channeling moonlight through a sacred arsenal of weapons. Guided by his sister Alune from afar through celestial magic, he walks a lonely path of devotion and discipline. In silence, he slays those who threaten the Lunari faith, his expression unreadable and his purpose unshakable. The poison he consumes to strengthen their spiritual bond renders him voiceless, but his blades speak with lethal clarity. Aphelios is not merely a warrior—he is the living will of the moon, a divine retribution wrapped in ritual and tragedy, illuminating darkness with silent and deadly grace.' },
-
-        {id: 11,
-        name: 'Ashe', backgroundImage: '../assets/wallpaper/Ashebg.png', icon: '../assets/characterimage/Ashe_Render.png',
-        HP: '610 – 2327', HP5: '3.5 – 12.85', AR: '26 – 104.2', MR: '30 – 52.1', MS: '325', Resource: 'N/A', ResourceRegen: 'N/A', AD: '59 – 109.15',
-        CritDMG: '175%', AttackRange: '600', Energy: '200', EnergyRegen: '50', BaseAS: '0.658', Windup: '21.93%', ASratio: '0.658', BonusAS: '0 – 56.61%',
-        MP: '280 – 875', MP5: '3.5 – 12.85',
-        GameplayRadius: '65', SelectRadius: '100', PathingRadius: '35', SelectHeight: '140', AcqRadius: '600',
-        lore: 'Ashe, the warmother of the Avarosan tribe, seeks to unite the Freljord under her banner of peace. Born with a rare magical connection to her ancestors, she wields a bow of true ice, embodying leadership and tradition. Though her mother’s death left her to lead young, Ashe grew into a tactful and compassionate ruler, balancing diplomacy and strength. With her sights set on a united Freljord, she hopes to end generations of bloodshed and tribal conflict. Ashe is not just a warrior queen—she is a beacon of hope in a land hardened by war, guiding her people toward unity.' },
-
-        {id: 12,
-        name: 'Aurelion Sol', backgroundImage: '../assets/wallpaper/Aurelion_Solbg.png', icon: '../assets/characterimage/Aurelion_Sol_Render.png',
-        HP: '600 – 2130', HP5: '5.5 – 14.85', AR: '22 – 90', MR: '30 – 52.1', MS: '335', Resource: 'N/A', ResourceRegen: 'N/A', AD: '58 – 112.4',
-        CritDMG: '175%', AttackRange: '550', Energy: '200', EnergyRegen: '50', BaseAS: '0.625', Windup: '20%', ASratio: 'N/A', BonusAS: '0 – 25.5%',
-        MP: '600 – 2130', MP5: '5.5 – 14.85',
-        GameplayRadius: '80' , SelectRadius: '180', PathingRadius: '35', SelectHeight: '100', AcqRadius: '400',
-        lore: "Aurelion Sol is a celestial dragon, forger of stars, betrayed and bound by the Targon Aspect. Once free to wander the cosmos in majesty, he was tricked into servitude by mortals who now wield his power. His disdain for Runeterra is matched only by his longing to reclaim his birthright and return to his divine purpose. Even shackled, his power eclipses that of any terrestrial being, warping space and hurling stars with effortless might. Aurelion Sol’s every action carries the echo of godhood—he is a reluctant force of cosmic destruction waiting to be unbound and blaze once more across the heavens."},
-
-      ];
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const characterId = parseInt(urlParams.get('id'));
-    const character = characters.find(c => c.id === characterId);
-
-    const content = document.getElementById('detail-content');
-    if (character) {
-          // set the background image of the page
-    document.body.style.backgroundImage = `url('${character.backgroundImage}')`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.body.style.backgroundRepeat = 'no-repeat';
-
-    // Oadd a translucent layer to improve text readability
-    document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
-    document.body.style.backgroundBlendMode = 'overlay';
-
-      content.innerHTML = `
-
+  if (character) {
+    content.innerHTML = `
       <div class="title">
         <h2>${character.name}</h2>
+      </div>
+      <div class="character-container">
+        <!-- Left Section for Image -->
+        <div class="left-section">
+          <img src="${character.icon}" alt="${character.name}" style="width: 400.5px; height: 702px;" />
         </div>
-        <div class="character-container">
-          <!-- Left Section for Image -->
-          <div class="left-section">
-            <img src="${character.icon}" alt="${character.name}" style="width: 400.5px; height: 702px;" />
-          </div>
 
-          <!-- Right Section for Stats and Lore -->
-          <div class="right-section">
-            <!-- Stats Table -->
-            <div class="stats-table">
-              <h3>Statistics</h3>
-<div class="stats-container">
-  <div class="section-header">
-    Level 1-18  
-    <span>Base statistics</span>
-    <span style="margin-left:auto;">
-  </div>
+        <!-- Right Section for Stats and Lore -->
+        <div class="right-section">
+          <div class="stats-table">
+            <h3>Statistics</h3>
+            <div class="stats-container">
+              <div class="section-header">
+                Level 1–18 Base Statistics
+              </div>
 
-  <div class="split-table">
-    <table class="stats-table column">
-      <tr><td><img src="../assets/icons/hp.png" alt="HP Icon">HP</td><td>${character.HP}</td></tr>
-      <tr><td>HP5</td><td>${character.HP5}</td></tr>
-      <tr><td>AR</td><td>${character.AR}</td></tr>
-      <tr><td>MR</td><td>${character.MR}</td></tr>
-      <tr><td>MS</td><td>${character.MS}</td></tr>
-    </table>
-    <table class="stats-table column">
-      <!-- <tr><td>Energy</td><td>${character.Energy}</td></tr> -->
-      <!-- <tr><td>Energy regen.</td><td>${character.EnergyRegen}</td></tr> -->
-      <tr><td>AD</td><td>${character.AD}</td></tr>
-      <tr><td>Crit. DMG</td><td>${character.CritDMG}</td></tr>
-      <tr><td>Attack range</td><td>${character.AttackRange}</td></tr>
-    </table>
-  </div>
+              <div class="split-table">
+                <table class="stats-table column">
+                  <tr><td><img src="../assets/icons/hp.png" class="sml-icon"> HP</td><td>${character.HP}</td></tr>
+                  <tr><td><img src="../assets/icons/HP5.png" class="sml-icon"> HP5</td><td>${character.HP5}</td></tr>
+                  <tr><td><img src="../assets/icons/AR.png" class="sml-icon"> AR</td><td>${character.AR}</td></tr>
+                  <tr><td><img src="../assets/icons/MR.png" class="sml-icon"> MR</td><td>${character.MR}</td></tr>
+                  <tr><td><img src="../assets/icons/MS.png" class="sml-icon"> MS</td><td>${character.MS}</td></tr>
+                </table>
+                <table class="stats-table column">
+                  <tr><td><img src="../assets/icons/AD.png" class="sml-icon"> AD</td><td>${character.AD}</td></tr>
+                  <tr><td><img src="../assets/icons/CritDMG.png" class="sml-icon"> Crit. DMG</td><td>${character.CritDMG}</td></tr>
+                  <tr><td><img src="../assets/icons/AttackRange.png" class="sml-icon"> Attack Range</td><td>${character.AttackRange}</td></tr>
+                </table>
+              </div>
 
-  <div class="section-header">Attack speed</div>
-  <table class="stats-table">
-    <tr><td>Base AS</td><td>${character.BaseAS}</td></tr>
-    <tr><td>Windup%</td><td>${character.Windup}</td></tr>
-    <tr><td>AS ratio</td><td>${character.ASratio}</td></tr>
-    <tr><td>Bonus AS</td><td>${character.BonusAS}</td></tr>
-  </table>
+              <div class="section-header">Attack Speed</div>
+              <table class="stats-table">
+                <tr><td>Base AS</td><td>${character.BaseAS}</td></tr>
+                <tr><td>Windup%</td><td>${character.Windup}</td></tr>
+                <tr><td>AS Ratio</td><td>${character.ASratio}</td></tr>
+                <tr><td>Bonus AS</td><td>${character.BonusAS}</td></tr>
+              </table>
 
-  <div class="section-header">Unit radius</div>
-  <div class="split-table">
-    <table class="stats-table column">
-      <tr><td>Gameplay radius</td><td>${character.GameplayRadius}</td></tr>
-      <tr><td>Pathing radius</td><td>${character.PathingRadius}</td></tr>
-      <tr><td>Acq. radius</td><td>${character.AcqRadius}</td></tr>
-    </table>
-    <table class="stats-table column">
-      <tr><td>Select. radius</td><td>${character.SelectRadius}</td></tr>
-      <tr><td>Select. height</td><td>${character.SelectHeight}</td></tr>
-    </table>
-  </div>
-
-</div>
-
-            </div>
-
-            <!-- Lore Section -->
-            <div class="lore">
-              <h3>Lore</h3>
-              <p>${character.lore}</p>
+              <div class="section-header">Unit Radius</div>
+              <div class="split-table">
+                <table class="stats-table column">
+                  <tr><td><img src="../assets/icons/Gameplay_radius.png" class="sml-icon"> Gameplay Radius</td><td>${character.GameplayRadius}</td></tr>
+                  <tr><td><img src="../assets/icons/Pathing_radius.png" class="sml-icon"> Pathing Radius</td><td>${character.PathingRadius}</td></tr>
+                  <tr><td><img src="../assets/icons/Acquisition_range.png" class="sml-icon"> Acq. Radius</td><td>${character.AcqRadius}</td></tr>
+                </table>
+                <table class="stats-table column">
+                  <tr><td><img src="../assets/icons/Selection_radius.png" class="sml-icon"> Select. Radius</td><td>${character.SelectRadius}</td></tr>
+                  <tr><td><img src="../assets/icons/Selection_height.png" class="sml-icon"> Select. Height</td><td>${character.SelectHeight}</td></tr>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
-      `;
-    } else {
-      content.innerHTML = `<p>Character not found.</p>`;
-    }
 
-    function closeDetail() {
-      window.history.back(); // Go back to the previous page
-    }
+          <!-- Lore Section -->
+          <div class="lore">
+            <h3>Lore</h3>
+            <p>${character.lore}</p>
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    content.innerHTML = `<p>Character not found.</p>`;
+  }
+}
+
+function closeDetail() {
+  window.history.back(); // Go back to previous view
+}
   </script>
+
+  <script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const characterId = parseInt(params.get('id'));
+    const character = characters.find(c => c.id === characterId);
+    renderCharacter(character);
+  });
+</script>
 
   <div class="footer">
     League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
   </div>
+
+
+
+  <script src="../js/character-details.js"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #161d35;
+  background-color: ##1b2838;
   margin: 0;
   padding: 20px;
 }
@@ -98,6 +98,10 @@ body::before {
     border-right: 1px solid #1c1c1c;
   }
 
+  .sml-icon {
+    width: 14px;
+    height: 14px;
+  }
   .lore {
     background-color: #b2a9ce2d;
     padding: 10px;
