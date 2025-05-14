@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>League of Stats - Share</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/mainpage.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/Share.css') }}">
+    <link rel="stylesheet" href="static/style/mainpage.css">
+    <link rel="stylesheet" href="static/style/Share.css">
     <link rel="stylesheet" href="/style/cursor.css">
 </head>
 
@@ -19,21 +19,21 @@
             <div class="sidebar-menu">
                 <a href="{{ url_for('dashboard') }}">
                     <div class="icon-placeholder">
-                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Dashboard Icon">
                     </div>
                     Dashboard
                 </a>
 
                 <a href="{{ url_for('share') }}" class="active">
                     <div class="icon-placeholder">
-                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Dashboard Icon">
                     </div>
                     Share
                 </a>
 
                 <a href="{{ url_for('friends') }}">
                     <div class="icon-placeholder">
-                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Dashboard Icon">
                     </div>
                     Friends
                 </a>

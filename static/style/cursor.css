@@ -1,4 +1,4 @@
 /* cursor.css */
 body {
-  cursor: url('/assets/icons/blue pointer.png'), auto;
+  cursor: url('/static/assets/icons/blue-pointer.png'), auto;
 }
