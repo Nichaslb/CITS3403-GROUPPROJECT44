@@ -3,89 +3,166 @@
 <head>
   <meta charset="UTF-8" />
   <title>Character Detail</title>
-  <link rel="stylesheet" href="static/style/styles.css">
+  <link rel="stylesheet" href="static/style/mainpage.css">
+  <link rel="stylesheet" href="static/style/characterdetails.css" />
   <link rel="stylesheet" href="static/style/cursor.css">
 
 </head>
+
 <body>
-  <div id="character-detail" class="detail">
+  <div class="main-container">
+    <div class="sidebar">
+        <div class="logo-area">
+            LEAGUE OF STATS
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="dashboard.html">
+                <div class="icon-placeholder">
+                    <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                </div>
+                Dashboard
+            </a>
+            <a href="characters.html" class="active">
+                <div class="icon-placeholder">
+                    <img src="../assets/icons/characters.png" alt="characters Icon">
+                </div>
+                Characters
+            </a>
+            <a href="patchnotes.html">
+                <div class="icon-placeholder">
+                    <img src="../assets/icons/patch.png" alt="patch Icon">
+                </div>
+                Patch Notes
+            </a>
+
+            <a href="Share.html">
+                <div class="icon-placeholder">
+                    <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                </div>
+                Share
+            </a>
+
+            <a href="Guide.html" >
+                <div class="icon-placeholder">
+                    <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                </div>
+                Guides
+            </a>
+
+            <a href="profile.html" class="profile-button">
+                <div class="profile-icon">
+                    <!-- here is the user's avatar, we will build this function later -->
+                </div>
+                Profile
+            </a>
+        </div>
+    </div>
+
+
+  <div id="detail-character" class="detail">
     <button onclick="closeDetail()">✖ Close</button>
-    <div id="detail-content"></div>
+
+    <div id="detail-content">
+      <!-- Character content will be injected here -->
+    </div>
   </div>
 
   <script>
-    const characters = [ 
-    { id: 1, name: 'Aatrox', icon: '../assets/images/Aatrox.png'},
-      { id: 2, name: 'Ahri', icon: '../assets/images/Ahri.png'},
-      { id: 3, name: 'Akali', icon: '../assets/images/Akali.png'},
-      { id: 4, name: 'Akshan', icon: '../assets/images/Akshan.png'},
-      { id: 5, name: 'Alistar', icon: '../assets/images/Alistar.png'},
-      { id: 6, name: 'Ambessa', icon: '../assets/images/Ambessa.png'},
-      { id: 7, name: 'Amumu', icon: '../assets/images/Amumu.png'},
-      { id: 8, name: 'Anivia', icon: '../assets/images/Anivia.png'},
-      { id: 9, name: 'Annie', icon: '../assets/images/Annie.png'},
-      { id: 10, name: 'Aphelios', icon: '../assets/images/Aphelios.png'},
-      { id: 11, name: 'Ashe', icon: '../assets/images/Ashe.png'},
-      { id: 12, name: 'Aurelion Sol', icon: '../assets/images/AurelionSol.png'},
-      { id: 13, name: 'Aurora', icon: '../assets/images/Aurora.png'},
-      { id: 14, name: 'Azir', icon: '../assets/images/Azir.png'},
-                    { id: 15, name: 'Bard', icon: '../assets/images/Bard.png'},
-                    { id: 16, name: "Bel'Velth", icon: "../assets/images/Bel'Veth.png"},
-                    { id: 17, name: 'Blitzcrank', icon: '../assets/images/Blitzcrank.png'},
-                    { id: 18, name: 'Cassiopeia', icon: '../assets/images/Cassiopeia.png'},
-                    { id: 19, name: "Cho'Gath", icon: "../assets/images/Cho'Gath.png"},
-                    { id: 20, name: 'Corki', icon: '../assets/images/Corki.png'},
-                    { id: 21, name: 'Darius', icon: '../assets/images/Darius.png'},
-                    { id: 22, name: 'Diana', icon: '../assets/images/Diana.png'},
-                    { id: 23, name: 'Dr. Mundo', icon: '../assets/images/Dr.png'},
-                    { id: 24, name: 'Draven', icon: '../assets/images/Draven.png'},
-                    { id: 25, name: 'Ekko', icon: '../assets/images/Ekko.png'},
-                    { id: 26, name: 'Elise', icon: '../assets/images/Elise.png'},
-                    { id: 27, name: 'Evelynn', icon: '../assets/images/Evelynn.png'},
-                    { id: 28, name: 'Ezreal', icon: '../assets/images/Ezreal.png'},
-                    { id: 29, name: 'Fiddlesticks', icon: '../assets/images/Fiddlesticks.png'},
-                    { id: 30, name: 'Fiora', icon: '../assets/images/Fiora.png'},
-                    { id: 31, name: 'Fizz', icon: '../assets/images/Fizz.png'},
-                    { id: 32, name: 'Galio', icon: '../assets/images/Galio.png'},
-                    { id: 33, name: 'Gangplank', icon: '../assets/images/Gangplank.png'},
-                    { id: 34, name: 'Garen', icon: '../assets/images/Garen.png'},
-                    { id: 35, name: 'Gnar', icon: '../assets/images/Gnar.png'},
-                    { id: 36, name: 'Gragas', icon: '../assets/images/Gragas.png'},
-                    { id: 37, name: 'Graves', icon: '../assets/images/GravesIcon.png'},
-                    { id: 38, name: 'Gwen', icon: '../assets/images/Gwen.png'},
-                    { id: 39, name: 'Hecarim', icon: '../assets/images/HecarimIcon.png'},
-                    { id: 40, name: 'Heimerdinger', icon: '../assets/images/HeimerdingerIcon.png'},
-                    { id: 41, name: 'Hwei', icon: '../assets/images/Hwei.png'},
-                    { id: 42, name: 'Illaoi', icon: '../assets/images/Illaoi.png'}
-    ];
+function renderCharacter(character) {
+  const content = document.getElementById('detail-character');
 
-    // Get the character ID from the URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const characterId = parseInt(urlParams.get('id'));
-
-    // Find the character details by ID
-    const character = characters.find(c => c.id === characterId);
-
-    // Display character details
-    const content = document.getElementById('detail-content');
-    if (character) {
-      content.innerHTML = `
-        <img src="${character.icon}" alt="${character.name}" style="width: 80px; height: 80px;" />
+  if (character) {
+    content.innerHTML = `
+      <div class="title">
         <h2>${character.name}</h2>
-        <p>${character.desc}</p>
-      `;
-    } else {
-      content.innerHTML = `<p>Character not found.</p>`;
-    }
+      </div>
+      <div class="character-container">
+        <!-- Left Section for Image -->
+        <div class="left-section">
+          <img src="${character.icon}" alt="${character.name}" style="width: 400.5px; height: 702px;" />
+        </div>
 
-    function closeDetail() {
-      window.history.back(); // Go back to the previous page
-    }
+        <!-- Right Section for Stats and Lore -->
+        <div class="right-section">
+          <div class="stats-table">
+            <h3>Statistics</h3>
+            <div class="stats-container">
+              <div class="section-header">
+                Level 1–18 Base Statistics
+              </div>
 
+              <div class="split-table">
+                <table class="stats-table column">
+                  <tr><td><img src="../assets/icons/hp.png" class="sml-icon"> HP</td><td>${character.HP}</td></tr>
+                  <tr><td><img src="../assets/icons/HP5.png" class="sml-icon"> HP5</td><td>${character.HP5}</td></tr>
+                  <tr><td><img src="../assets/icons/AR.png" class="sml-icon"> AR</td><td>${character.AR}</td></tr>
+                  <tr><td><img src="../assets/icons/MR.png" class="sml-icon"> MR</td><td>${character.MR}</td></tr>
+                  <tr><td><img src="../assets/icons/MS.png" class="sml-icon"> MS</td><td>${character.MS}</td></tr>
+                </table>
+                <table class="stats-table column">
+                  <tr><td><img src="../assets/icons/AD.png" class="sml-icon"> AD</td><td>${character.AD}</td></tr>
+                  <tr><td><img src="../assets/icons/CritDMG.png" class="sml-icon"> Crit. DMG</td><td>${character.CritDMG}</td></tr>
+                  <tr><td><img src="../assets/icons/AttackRange.png" class="sml-icon"> Attack Range</td><td>${character.AttackRange}</td></tr>
+                </table>
+              </div>
+
+              <div class="section-header">Attack Speed</div>
+              <table class="stats-table">
+                <tr><td>Base AS</td><td>${character.BaseAS}</td></tr>
+                <tr><td>Windup%</td><td>${character.Windup}</td></tr>
+                <tr><td>AS Ratio</td><td>${character.ASratio}</td></tr>
+                <tr><td>Bonus AS</td><td>${character.BonusAS}</td></tr>
+              </table>
+
+              <div class="section-header">Unit Radius</div>
+              <div class="split-table">
+                <table class="stats-table column">
+                  <tr><td><img src="../assets/icons/Gameplay_radius.png" class="sml-icon"> Gameplay Radius</td><td>${character.GameplayRadius}</td></tr>
+                  <tr><td><img src="../assets/icons/Pathing_radius.png" class="sml-icon"> Pathing Radius</td><td>${character.PathingRadius}</td></tr>
+                  <tr><td><img src="../assets/icons/Acquisition_range.png" class="sml-icon"> Acq. Radius</td><td>${character.AcqRadius}</td></tr>
+                </table>
+                <table class="stats-table column">
+                  <tr><td><img src="../assets/icons/Selection_radius.png" class="sml-icon"> Select. Radius</td><td>${character.SelectRadius}</td></tr>
+                  <tr><td><img src="../assets/icons/Selection_height.png" class="sml-icon"> Select. Height</td><td>${character.SelectHeight}</td></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lore Section -->
+          <div class="lore">
+            <h3>Lore</h3>
+            <p>${character.lore}</p>
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    content.innerHTML = `<p>Character not found.</p>`;
+  }
+}
+
+function closeDetail() {
+  window.history.back(); // Go back to previous view
+}
   </script>
 
-<div class="footer">
-  League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
-</div>
+  <script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const characterId = parseInt(params.get('id'));
+    const character = characters.find(c => c.id === characterId);
+    renderCharacter(character);
+  });
+</script>
+
+  <div class="footer">
+    League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
+  </div>
+
+
+
+  <script src="../js/character-details.js"></script>
 </body>
 </html>
