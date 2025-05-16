@@ -3,8 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <title>Create a New Guide</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style/mainpage.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style/createguide.css') }}" />
 </head>
 <body>
+    <div class="sidebar">
+        <div class="logo-area">LEAGUE OF STATS</div>
+
+        <div class="sidebar-menu">
+            <a href="{{ url_for('dashboard') }}">
+                <div class="icon-placeholder">
+                    <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Dashboard Icon" />
+                </div>
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('share') }}">
+                <div class="icon-placeholder">
+                    <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Share Icon" />
+                </div>
+                Share
+            </a>
+
+            <a href="{{ url_for('friends') }}">
+                <div class="icon-placeholder">
+                    <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Friends Icon" />
+                </div>
+                Friends
+            </a>
+
+            <a href="{{ url_for('guide') }}" class="active">
+                <div class="icon-placeholder">
+                    <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Guides Icon" />
+                </div>
+                Guides
+            </a>
+
+            <a href="{{ url_for('characters') }}">
+                <div class="icon-placeholder">
+                    <img src="{{ url_for('static', filename='static/assets/icons/characters.png') }}" alt="Characters Icon" />
+                </div>
+                Champions
+            </a>
+
+            <a href="{{ url_for('patchnotes') }}">
+                <div class="icon-placeholder">
+                    <img src="{{ url_for('static', filename='static/assets/icons/patch.png') }}" alt="Patch Notes Icon" />
+                </div>
+                Patch Notes
+            </a>
+        </div>
+
+        <a href="{{ url_for('profile') }}" class="profile-button">
+            <div class="profile-icon">
+                <!-- User avatar placeholder -->
+            </div>
+            Profile
+        </a>
+    </div>
     <h1>Create a New Guide</h1>
     <form action="{{ url_for('submit_guide') }}" method="post">
         <input type="hidden" name="user_id" value="{{ user.id }}">
