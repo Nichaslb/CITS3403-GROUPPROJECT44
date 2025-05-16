@@ -29,7 +29,6 @@
   background: #100f1b;
   border-radius: 1rem;
   padding: 0rem;
-  cursor: pointer;
   transition: transform 0.2s;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -56,5 +55,4 @@ button {
   background: transparent;
   border: none;
   font-size: 1.2rem;
-  cursor: pointer;
 }

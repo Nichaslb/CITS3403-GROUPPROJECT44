@@ -6,12 +6,14 @@
 }
 
 .guide-item {
+
     border: 1px solid #ccc;
     margin-bottom: 15px;
     padding: 15px;
     border-radius: 10px;
     word-wrap: break-word; /* ensures long text wraps */
     white-space: normal;
+
 }
 
 .guide-item p {

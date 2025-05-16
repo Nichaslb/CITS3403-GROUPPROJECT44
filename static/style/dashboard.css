@@ -122,7 +122,6 @@
 
 .match-item:hover {
     background-color: #2a3f5a;
-    cursor: pointer;
 }
 
 .match-win {
@@ -210,7 +209,6 @@
     color: #c7d5e0;
     padding: 8px 12px;
     border-radius: 4px;
-    cursor: pointer;
     transition: background-color 0.2s, color 0.2s;
     font-size: 14px;
 }
@@ -473,7 +471,6 @@
     padding: 12px 25px;
     border-radius: 6px;
     font-size: 16px;
-    cursor: pointer;
     transition: background-color 0.2s;
 }
 
