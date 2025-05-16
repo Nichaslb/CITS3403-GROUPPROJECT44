@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create a New Guide</title>
+</head>
+<body>
+    <h1>Create a New Guide</h1>
+    <form action="{{ url_for('submit_guide') }}" method="post">
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+        
+        <label for="title">Guide Title:</label><br>
+        <input type="text" id="title" name="title" placeholder="Enter your guide title" required><br><br>
+
+        <label for="content">Guide Content:</label><br>
+        <textarea id="content" name="content" rows="10" cols="50" placeholder="Write your guide here..." required></textarea><br><br>
+
+        <input type="submit" value="Submit Guide">
+    </form>
+</body>
+</html>

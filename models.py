@@ -68,5 +68,31 @@ class Friend(db.Model):
     user = db.relationship('User', foreign_keys=[user_id], backref=db.backref('friends_added', lazy=True))
     friend = db.relationship('User', foreign_keys=[friend_id], backref=db.backref('friends_of', lazy=True))
     
+
+class Guides(db.Model):
+    __tablename__ = 'guides'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.String(500), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref=db.backref('guides', lazy='dynamic'))
+
+class SharedGuide(db.Model):
+    __tablename__ = 'shared_guides'
+
+    id = db.Column(db.Integer, primary_key=True)
+    guide_id = db.Column(db.Integer, db.ForeignKey('guides.id'), nullable=False)
+    recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    shared_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    guide = db.relationship('Guides', backref=db.backref('shared_with', lazy='dynamic'))
+    recipient = db.relationship('User', backref=db.backref('received_guides', lazy='dynamic'))
+
+
+
+
     def __repr__(self):
         return f'<Friend {self.user_id}-{self.friend_id}>'
