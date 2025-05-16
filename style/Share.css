@@ -34,7 +34,217 @@ background-color: rgba(0, 0, 0, 0.15);
 border-color: rgba(0, 255, 76, 0.25);
 }
 
+/* static/style/Share.css */
 
+.share-page-content {
+    padding: 20px;
+    display: flex; /* Use flex to center share-container if needed */
+    justify-content: center;
+}
+
+.share-container {
+    display: flex;
+    gap: 25px;
+    width: 100%;
+    max-width: 1100px; /* Adjust as per your design */
+}
+
+.share-left-panel {
+    flex: 0 0 300px; /* Do not grow, do not shrink, base width 300px */
+    background-color: rgba(30, 35, 40, 0.85);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    height: calc(100vh - 180px); /* Adjust based on header/footer height */
+    display: flex;
+    flex-direction: column;
+}
+
+.share-left-panel h2 {
+    color: #cdfafa;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #3f464e;
+    padding-bottom: 10px;
+    font-size: 1.4rem;
+    flex-shrink: 0; /* Prevent h2 from shrinking */
+}
+
+.friends-list-share {
+    overflow-y: auto;
+    flex-grow: 1; /* Allow list to take available space */
+}
+
+.friends-list-share .friend-item-share {
+    display: flex;
+    align-items: center;
+    padding: 12px 10px;
+    margin-bottom: 8px;
+    background-color: #161a1e;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, border-left 0.2s ease-in-out;
+    border-left: 3px solid transparent;
+}
+
+.friends-list-share .friend-item-share:hover {
+    background-color: #2c3238;
+}
+
+.friends-list-share .friend-item-share.active {
+    background-color: #22272c;
+    border-left: 3px solid #0acbe6; /* Highlight for active friend */
+}
+
+.friend-item-share .friend-icon-placeholder-share {
+    width: 32px;
+    height: 32px;
+    background-color: #3a4047;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f0e6d2;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.friend-item-share .friend-username-share {
+    color: #e0d8c8;
+    font-weight: 500;
+    font-size: 0.95em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.share-right-panel {
+    flex: 1; /* Takes remaining space */
+    background-color: rgba(30, 35, 40, 0.75);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    height: calc(100vh - 180px); /* Match left panel or adjust */
+    overflow-y: auto;
+}
+
+.share-right-panel h2 {
+    color: #cdfafa;
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #3f464e;
+    padding-bottom: 10px;
+    font-size: 1.4rem;
+}
+
+.friend-stats-display .initial-message {
+    color: #8a929b;
+    font-style: italic;
+    text-align: center;
+    padding: 30px 10px;
+    font-size: 1em;
+}
+
+.friend-stats-display .info-message { /* For loading or error messages */
+    color: #a09b8c;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+    border-radius: 4px;
+    background-color: rgba(0,0,0,0.1);
+}
+.friend-stats-display .info-message.error {
+    color: #e65252;
+    background-color: rgba(230, 82, 82, 0.1);
+}
+
+
+.friend-info-card {
+    padding: 10px;
+}
+
+.friend-info-card h3 { /* Friend's username */
+    color: #f0e6d2;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.6em;
+    font-weight: 600;
+}
+
+.friend-info-card .stat-item {
+    margin-bottom: 25px;
+    padding: 18px;
+    background-color: rgba(17, 19, 24, 0.7); /* Darker background for stat items */
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.friend-info-card h4 {
+    color: #0acbe6; /* Accent color */
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.05em;
+    font-weight: 600;
+    border-bottom: 1px solid #333a40;
+    padding-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.friend-info-card .stat-value {
+    color: #f0e6d2;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.friend-info-card .data-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.friend-info-card .data-list li {
+    background-color: #22272c;
+    padding: 10px 15px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    color: #b0bac0;
+    font-size: 0.95em;
+}
+
+.loading-message, .no-friends-message, .error-message { /* From friends.css, can be reused or adapted */
+    color: #a09b8c;
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+}
+.error-message {
+    color: #e65252;
+}
+
+/* Custom Scrollbar for Webkit browsers */
+.friends-list-share::-webkit-scrollbar,
+.share-right-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.friends-list-share::-webkit-scrollbar-track,
+.share-right-panel::-webkit-scrollbar-track {
+    background: rgba(30, 35, 40, 0.5);
+    border-radius: 10px;
+}
+
+.friends-list-share::-webkit-scrollbar-thumb,
+.share-right-panel::-webkit-scrollbar-thumb {
+    background: #4a525a;
+    border-radius: 10px;
+}
+
+.friends-list-share::-webkit-scrollbar-thumb:hover,
+.share-right-panel::-webkit-scrollbar-thumb:hover {
+    background: #5f6870;
+}
     
 
 

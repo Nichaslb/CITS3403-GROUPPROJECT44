@@ -1,5 +1,3 @@
-// 完整替换版 stats.js
-
 document.addEventListener('DOMContentLoaded', function() {
     fetchRiotIdInfo();
     fetchGameModeStats();
@@ -155,11 +153,11 @@ function showAnalyzeConfirmModal() {
 
             if (data.status === 'success' && data.canAnalyze) {
                 modal.style.display = 'block';
-                msg.textContent = '确定要分析您的游戏数据吗？';
+                msg.textContent = 'Are you sure you want to analyze? We suggest that you analyze after the match is over';
                 confirmBtn.style.display = 'inline-block';
             } else {
                 modal.style.display = 'block';
-                msg.textContent = data.message || '暂时无法分析，请稍后再试。';
+                msg.textContent = data.message || 'Unavailable right now';
                 confirmBtn.style.display = 'none';
             }
 
@@ -169,7 +167,7 @@ function showAnalyzeConfirmModal() {
         })
         .catch(err => {
             console.error('Error checking analyze status:', err);
-            alert('分析功能出错，请稍后再试。');
+            alert('ERROER: Unable to check analyze status');
         });
 }
 
@@ -186,7 +184,7 @@ function analyzeMatches() {
         headers: { 'Content-Type': 'application/json' } 
     })
         .then(res => res.json())
-        .then((data) => {  // 修复：添加括号和箭头函数语法
+        .then((data) => {  
             document.getElementById('loading-stats').style.display = 'none';
             if (data.status === 'success' && data.data.total_matches > 0) {
                 displayGameModeStats(data.data);
@@ -199,7 +197,7 @@ function analyzeMatches() {
                 document.getElementById('error-stats').style.display = 'block';
             }
         })
-        .catch((err) => {  // 修复：添加括号和箭头函数语法
+        .catch((err) => { 
             console.error('Error analyzing matches:', err);
             document.getElementById('loading-stats').style.display = 'none';
             document.getElementById('error-stats').style.display = 'block';

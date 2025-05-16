@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -58,5 +58,98 @@
     <div class="footer">
         League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
     </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>League of Stats - Share with Friends</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/mainpage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/Share.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/cursor.css') }}">
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="logo-area">
+                LEAGUE OF STATS
+            </div>
+            
+            <div class="sidebar-menu">
+                <a href="{{ url_for('dashboard') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                    </div>
+                    Dashboard
+                </a>
+
+                <a href="{{ url_for('share') }}" class="active">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                    </div>
+                    Share
+                </a>
+
+                <a href="{{ url_for('friends') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                    </div>
+                    Friends
+                </a>
+            </div>
+
+            <a href="{{ url_for('profile') }}" class="profile-button">
+                <div class="profile-icon">
+                    </div>
+                Profile
+            </a>
+        </div>
+
+        <div class="content share-page-content">
+            <div class="share-container">
+                <div class="share-left-panel">
+                    <h2>Your Friends</h2>
+                    <div id="friends-list-share-container" class="friends-list-share">
+                        <p class="loading-message">Loading friends...</p>
+                        </div>
+                </div>
+                <div class="share-right-panel">
+                    <h2>Friend's Shared Stats</h2>
+                    <div id="friend-stats-display-container" class="friend-stats-display">
+                        <p class="initial-message">Select a friend from the list to see their shared stats.</p>
+                        
+                        <div id="friend-info-card" class="friend-info-card" style="display: none;">
+                            <h3 id="friend-username-display"></h3>
+                            <div class="stat-item">
+                                <h4>Favorite Champions (Recent Top 3)</h4>
+                                <ul id="friend-fave-champs-list" class="data-list">
+                                    </ul>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Total Multikills (Recent)</h4>
+                                <p id="friend-total-multikills-value" class="stat-value">0</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Favorite Game Mode (Recent)</h4>
+                                <p id="friend-fave-gamemode-value" class="stat-value">N/A</p>
+                            </div>
+                        </div>
+                        <div id="friend-stats-message" class="info-message" style="display: none;">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
+    </div>
+
+    <script src="{{ url_for('static', filename='js/share.js') }}"></script>
 </body>
 </html>

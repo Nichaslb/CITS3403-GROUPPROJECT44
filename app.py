@@ -330,6 +330,8 @@ def api_analyze_game_modes():
         analysis.avg_vision_score = detailed['fun_stats'].get('avg_vision_score', 0)
         analysis.total_damage_dealt = detailed['fun_stats'].get('total_damage_dealt_to_champions', 0)
         analysis.avg_damage_per_match = detailed['fun_stats'].get('avg_damage_per_match', 0)
+        analysis.total_damage_taken = detailed['fun_stats']['total_damage_taken']
+        analysis.total_items_purchased = detailed['fun_stats']['total_items_purchased']
         
         # 敌方和己方英雄数据
         if 'enemy_champions' in detailed:
@@ -407,7 +409,7 @@ def build_simplified_analysis(user_id, matches):
             "total_vision_score": detailed.total_vision_score,
             "avg_vision_score": detailed.avg_vision_score,
             "total_damage_dealt_to_champions": detailed.total_damage_dealt,
-            "avg_damage_per_match": detailed.avg_damage_per_match
+            "avg_damage_per_match": detailed.avg_damage_per_match,
         }
         
         # 如果有敌方和己方英雄数据，也添加进去
@@ -487,7 +489,9 @@ def api_game_modes_stats():
                 "total_vision_score": detailed_analysis.total_vision_score,
                 "avg_vision_score": detailed_analysis.avg_vision_score,
                 "total_damage_dealt_to_champions": detailed_analysis.total_damage_dealt,
-                "avg_damage_per_match": detailed_analysis.avg_damage_per_match
+                "avg_damage_per_match": detailed_analysis.avg_damage_per_match,
+                "total_damage_taken": detailed_analysis.total_damage_taken,
+                "total_items_purchased": detailed_analysis.total_items_purchased
             }
         }
         
@@ -730,6 +734,94 @@ def api_can_analyze():
         "status": "success",
         "canAnalyze": True,
         "message": "可以进行分析"
+    })
+
+@app.route('/api/friend_summary/<int:friend_user_id>')
+@login_required # Ensure only logged-in users can access
+def get_friend_summary(friend_user_id):
+    current_user_id = session.get('user_id')
+
+    # Verify if the requested user is actually a friend of the current user.
+    # This is an important security/privacy check.
+    # Checking both directions of friendship as per your add_friend logic
+    is_friend_check = Friend.query.filter(
+        Friend.user_id == current_user_id,
+        Friend.friend_id == friend_user_id
+    ).first()
+
+    if not is_friend_check:
+        # If you want to be more discreet and not reveal friendship status,
+        # you could return a generic "data not found" or "permission denied"
+        return jsonify({"status": "error", "message": "Requested user is not a friend or permission denied."}), 403
+
+    friend_user = User.query.get(friend_user_id)
+    if not friend_user:
+        return jsonify({"status": "error", "message": "Friend user not found."}), 404
+
+    detailed_analysis = DetailedAnalysis.query.filter_by(user_id=friend_user_id).first()
+    game_mode_stats = GameModeStats.query.filter_by(user_id=friend_user_id).first()
+
+    if not detailed_analysis or not game_mode_stats:
+        return jsonify({
+            "status": "info",
+            "message": f"Analysis data for {friend_user.username} is not available yet. They might need to perform an analysis on their dashboard.",
+            "data": {
+                "username": friend_user.username,
+                "favorite_champions": [],
+                "total_multikills": 0,
+                "favorite_game_mode": "Not Available"
+            }
+        }), 200 # Using 200 with an info message as data structure is still returned
+
+    summary_data = {
+        "username": friend_user.username,
+        "favorite_champions": [],
+        "total_multikills": 0,
+        "favorite_game_mode": "Not Available"
+    }
+
+    # 1. Extract Favorite Champions (e.g., top 3)
+    if detailed_analysis.favorite_champions:
+        # Assuming favorite_champions is a dict like {'ChampionName': play_count}
+        # Sort by play_count and take top 3 champion names
+        try:
+            sorted_champions = sorted(detailed_analysis.favorite_champions.items(), key=lambda item: item[1], reverse=True)
+            summary_data["favorite_champions"] = [champ[0] for champ in sorted_champions[:3]]
+        except Exception as e:
+            print(f"Error processing favorite champions for user {friend_user_id}: {e}")
+            summary_data["favorite_champions"] = ["Error processing"]
+
+
+    # 2. Calculate Total Multikills
+    summary_data["total_multikills"] = (
+        (detailed_analysis.double_kills or 0) +
+        (detailed_analysis.triple_kills or 0) +
+        (detailed_analysis.quadra_kills or 0) +
+        (detailed_analysis.penta_kills or 0)
+    )
+
+    # 3. Determine Favorite Game Mode
+    if game_mode_stats:
+        modes_percentages = {
+            "Summoner's Rift 5v5": game_mode_stats.sr_5v5_percentage or 0,
+            "ARAM": game_mode_stats.aram_percentage or 0,
+            "Fun Modes": game_mode_stats.fun_modes_percentage or 0,
+            "Bot Games": game_mode_stats.bot_games_percentage or 0,
+            "Custom Games": game_mode_stats.custom_percentage or 0,
+        }
+        # Filter out modes with 0% and find the max
+        played_modes = {mode: perc for mode, perc in modes_percentages.items() if perc > 0}
+        if played_modes:
+            summary_data["favorite_game_mode"] = max(played_modes, key=played_modes.get)
+        elif game_mode_stats.total_matches > 0 : # If analyzed but no specific mode preference
+             summary_data["favorite_game_mode"] = "Varied / Other Modes"
+        else: # No matches analyzed or all percentages are 0
+            summary_data["favorite_game_mode"] = "N/A (No games analyzed)"
+
+
+    return jsonify({
+        "status": "success",
+        "data": summary_data
     })
 
 if __name__ == '__main__':

@@ -104,6 +104,8 @@ class DetailedAnalysis(db.Model):
     avg_vision_score = db.Column(db.Float, default=0)
     total_damage_dealt = db.Column(db.Integer, default=0)
     avg_damage_per_match = db.Column(db.Integer, default=0)
+    total_damage_taken = db.Column(db.Integer, default=0)
+    total_items_purchased = db.Column(db.Integer, default=0)
     
     # 敌方英雄和己方英雄数据（存储JSON格式）
     enemy_champions = db.Column(db.JSON, default={})

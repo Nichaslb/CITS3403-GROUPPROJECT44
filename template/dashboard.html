@@ -46,18 +46,18 @@
             </a>
         </div>
         
-        <!-- 内容部分 -->
+
         <div class="content">
             <div class="welcome-header">
                 <h1>Hi, {{ session.username }}</h1>
                 <div id="riot-id" class="player-tag">Loading Riot ID...</div>
-                <!-- 红色方框区域添加分析按钮 -->
+
                 <div class="quick-analyze-button-container">
-                    <button id="quick-analyze-button" class="action-button">分析游戏数据</button>
+                    <button id="quick-analyze-button" class="action-button">Analyze</button>
                 </div>
             </div>
             
-            <!-- 加载和错误信息 -->
+
             <div id="loading-stats" class="loading-container">
                 <div class="loading-spinner"></div>
                 <p>Analyzing your match history...</p>
@@ -72,14 +72,13 @@
                 <p>No match history found. Play some games and come back later!</p>
             </div>
             
-<!-- 修改 dashboard.html 的 main-analysis-container 和 fun-stats-container -->
-<!-- 以下是新的结构建议，包含你的要求 -->
 
-<!-- 紧凑美观对齐版 dashboard.html 分析区域布局 -->
+
+
 <div id="main-analysis-container" class="analysis-section" style="display: none;">
     <h2>Your Recent Matches Analysis</h2>
   
-    <!-- 第一行：4个小卡片 -->
+
     <div class="analysis-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
       <div class="analysis-card">
         <h3>Favorite Champion</h3>
@@ -98,8 +97,7 @@
         <div id="top-enemy-champion" class="data-list"></div>
       </div>
     </div>
-  
-    <!-- 第二行：3个中卡片，统一高度 -->
+
     <div class="analysis-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
       <div class="analysis-card">
         <h3>Multikill Stats</h3>
@@ -176,7 +174,7 @@
     </div>
   </div>
   
-  <!-- 趣味数据部分保持 4栏结构不动 -->
+
   <div id="fun-stats-container" class="fun-stats-section" style="display: none;">
     <h2>Fun Totals</h2>
     <div class="fun-stats-grid">
@@ -217,21 +215,21 @@
   
   
             
-            <!-- 分析按钮容器 -->
+
             <div id="analyze-button-container" class="button-container" style="display: none;">
                 <button id="analyze-button" class="action-button">Analyze My Matches</button>
             </div>
         </div>
     </div>
     
-    <!-- 弹出确认对话框 -->
+
     <div id="analyze-confirm-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-title">确认分析</div>
-            <div id="modal-message" class="modal-message">仅在需要分析的时候进行分析。确定要立即分析您的游戏数据吗？</div>
+            <div class="modal-title">conformation</div>
+            <div id="modal-message" class="modal-message">Are you sure you want to analyze? We suggest that you analyze after the match is over</div>
             <div class="modal-buttons">
-                <button id="cancel-analyze-button" class="modal-button modal-cancel">取消</button>
-                <button id="confirm-analyze-button" class="modal-button modal-confirm">确认分析</button>
+                <button id="cancel-analyze-button" class="modal-button modal-cancel">Cancel</button>
+                <button id="confirm-analyze-button" class="modal-button modal-confirm">Yes</button>
             </div>
         </div>
     </div>
