@@ -7,7 +7,7 @@ import time
 from functools import wraps
 from flask_migrate import Migrate
 
-from flask_login import login_required, current_user, LoginManager, UserMixin
+from flask_login import login_required, current_user
 
 
 # 从models导入数据库模型
@@ -170,10 +170,16 @@ def patchnotes():
 def characters():
     return render_template('characters.html')
 
+
 @app.route('/create_guide')
-@login_required
 def create_guide():
-    return render_template('create_guide.html', user=current_user)
+    if 'user_id' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+    return render_template('create_guide.html', user=user)
+
 
 @app.route('/guide_inbox')
 @login_required
@@ -181,9 +187,12 @@ def guide_inbox():
     return render_template('guide_inbox.html')
 
 @app.route('/user_guide')
-@login_required
 def user_guide():
-    user = current_user
+    if 'user_id' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
     guides = user.guides.order_by(Guides.created_at.desc()).all()
     return render_template('user_guide.html', user=user, guides=guides)
 
