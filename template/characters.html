@@ -16,21 +16,21 @@
             <div class="sidebar-menu">
                 <a href="{{ url_for('dashboard') }}">
                     <div class="icon-placeholder">
-                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon" />
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Dashboard Icon" />
                     </div>
                     Dashboard
                 </a>
 
                 <a href="{{ url_for('share') }}">
                     <div class="icon-placeholder">
-                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Share Icon" />
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Share Icon" />
                     </div>
                     Share
                 </a>
 
                 <a href="{{ url_for('friends') }}">
                     <div class="icon-placeholder">
-                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Friends Icon" />
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Friends Icon" />
                     </div>
                     Friends
                 </a>
@@ -38,21 +38,21 @@
                 <!-- Use url_for for Flask routes instead of static html files -->
                 <a href="{{ url_for('guide') }}">
                     <div class="icon-placeholder">
-                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Guides Icon" />
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Guides Icon" />
                     </div>
                     Guides
                 </a>
 
                 <a href="{{ url_for('characters') }}" class="active">
                     <div class="icon-placeholder">
-                        <img src="{{ url_for('static', filename='assets/icons/characters.png') }}" alt="Characters Icon" />
+                        <img src="{{ url_for('static', filename='static/assets/icons/characters.png') }}" alt="Characters Icon" />
                     </div>
                     Characters
                 </a>
 
                 <a href="{{ url_for('patchnotes') }}">
                     <div class="icon-placeholder">
-                        <img src="{{ url_for('static', filename='assets/icons/patch.png') }}" alt="Patch Notes Icon" />
+                        <img src="{{ url_for('static', filename='static/assets/icons/patch.png') }}" alt="Patch Notes Icon" />
                     </div>
                     Patch Notes
                 </a>
@@ -81,8 +81,10 @@
         <div class="Title">
             <h2>Champions Gallery</h2>
         </div>
-                            
+        <div class="grid" id="character-grid"></div>
         <script>
+            const grid = document.getElementById('character-grid');
+
                 const characters = [
                         { id: 1, name: 'Aatrox', icon: '/static/assets/charactericons/Aatrox.png' },
                         { id: 2, name: 'Ahri', icon: '/static/assets/charactericons/Ahri.png' },
@@ -128,7 +130,7 @@
                         { id: 42, name: 'Illaoi', icon: '/static/assets/charactericons/Illaoi.png' }
                 ];
 
-                const grid = document.getElementById('character-grid');
+                
 
                 characters.forEach(char => {
                         const card = document.createElement('div');
