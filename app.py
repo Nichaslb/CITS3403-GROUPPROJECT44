@@ -153,6 +153,21 @@ def friends():
     user = User.query.get(session['user_id'])
     return render_template('friends.html', user=user)
 
+@app.route('/guide')
+@login_required
+def guide():
+    return render_template('guide.html')
+
+@app.route('/patchnotes')
+def patchnotes():
+    return render_template('patchnotes.html')
+
+
+@app.route('/characters')
+def characters():
+    return render_template('characters.html')
+
+
 @app.route('/update_profile', methods=['POST'])
 @login_required
 def update_profile():

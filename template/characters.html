@@ -1,154 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>League of Stats - Dashboard</title>
-    <link rel="stylesheet" href="static/style/mainpage.css">
-    <link rel="stylesheet" href="static/style/character.css">
-    <link rel="stylesheet" href="static/style/cursor.css">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style/mainpage.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style/character.css') }}" />
 </head>
 
 <body>
     <div class="main-container">
         <div class="sidebar">
-            <div class="logo-area">
-                LEAGUE OF STATS
-            </div>
-            
+            <div class="logo-area">LEAGUE OF STATS</div>
+
             <div class="sidebar-menu">
-                <a href="dashboard.html">
+                <a href="{{ url_for('dashboard') }}">
                     <div class="icon-placeholder">
-                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Dashboard Icon" />
                     </div>
                     Dashboard
                 </a>
-                <a href="characters.html" class="active">
-                    <div class="icon-placeholder">
-                        <img src="../assets/icons/characters.png" alt="characters Icon">
-                    </div>
-                    Characters
-                </a>
-                <a href="patchnotes.html">
-                    <div class="icon-placeholder">
-                        <img src="../assets/icons/patch.png" alt="patch Icon">
-                    </div>
-                    Patch Notes
-                </a>
 
-                <a href="Share.html">
+                <a href="{{ url_for('share') }}">
                     <div class="icon-placeholder">
-                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Share Icon" />
                     </div>
                     Share
                 </a>
 
-                <a href="Guide.html" >
+                <a href="{{ url_for('friends') }}">
                     <div class="icon-placeholder">
-                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Friends Icon" />
+                    </div>
+                    Friends
+                </a>
+
+                <!-- Use url_for for Flask routes instead of static html files -->
+                <a href="{{ url_for('guide') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Guides Icon" />
                     </div>
                     Guides
                 </a>
 
-                <a href="profile.html" class="profile-button">
-                    <div class="profile-icon">
-                        <!-- here is the user's avatar, we will build this function later -->
+                <a href="{{ url_for('characters') }}" class="active">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='static/assets/icons/characters.png') }}" alt="Characters Icon" />
                     </div>
-                    Profile
+                    Characters
+                </a>
+
+                <a href="{{ url_for('patchnotes') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='static/assets/icons/patch.png') }}" alt="Patch Notes Icon" />
+                    </div>
+                    Patch Notes
                 </a>
             </div>
+
+            <a href="{{ url_for('profile') }}" class="profile-button">
+                <div class="profile-icon">
+                    <!-- User avatar placeholder -->
+                </div>
+                Profile
+            </a>
         </div>
 
-            <!-- content section for characters.html-->
+
+
+
         <div class="content">
-            <div class="grid" id="character-grid"></div>
       
             <div id="character-detail" class="detail hidden">
               <button onclick="closeDetail()">✖ Close</button>
               <div id="detail-content"></div>
             </div>
-          </div>
         </div>
-        
-        <div class="Title">
-            <h2> Champions Gallery </h2>
-        </div>
-    
 
+
+        <div class="Title">
+            <h2>Champions Gallery</h2>
+        </div>
+        <div class="grid" id="character-grid"></div>
         <script>
+            const grid = document.getElementById('character-grid');
+
                 const characters = [
-                    { id: 1, name: 'Aatrox', icon: '../assets/charactericons/Aatrox.png'},
-                    { id: 2, name: 'Ahri', icon: '../assets/charactericons/Ahri.png'},
-                    { id: 3, name: 'Akali', icon: '../assets/charactericons/Akali.png'},
-                    { id: 4, name: 'Akshan', icon: '../assets/charactericons/Akshan.png'},
-                    { id: 5, name: 'Alistar', icon: '../assets/charactericons/Alistar.png'},
-                    { id: 6, name: 'Ambessa', icon: '../assets/charactericons/Ambessa.png'},
-                    { id: 7, name: 'Amumu', icon: '../assets/charactericons/Amumu.png'},
-                    { id: 8, name: 'Anivia', icon: '../assets/charactericons/Anivia.png'},
-                    { id: 9, name: 'Annie', icon: '../assets/charactericons/Annie.png'},
-                    { id: 10, name: 'Aphelios', icon: '../assets/charactericons/Aphelios.png'},
-                    { id: 11, name: 'Ashe', icon: '../assets/charactericons/Ashe.png'},
-                    { id: 12, name: 'Aurelion Sol', icon: '../assets/charactericons/AurelionSol.png'},
-                    { id: 13, name: 'Aurora', icon: '../assets/charactericons/Aurora.png'},
-                    { id: 14, name: 'Azir', icon: '../assets/charactericons/Azir.png'},
-                    { id: 15, name: 'Bard', icon: '../assets/charactericons/Bard.png'},
-                    { id: 16, name: "Bel'Velth", icon: "../assets/charactericons/Bel'Veth.png"},
-                    { id: 17, name: 'Blitzcrank', icon: '../assets/charactericons/Blitzcrank.png'},
-                    { id: 18, name: 'Cassiopeia', icon: '../assets/charactericons/Cassiopeia.png'},
-                    { id: 19, name: "Cho'Gath", icon: "../assets/charactericons/Cho'Gath.png"},
-                    { id: 20, name: 'Corki', icon: '../assets/charactericons/Corki.png'},
-                    { id: 21, name: 'Darius', icon: '../assets/charactericons/Darius.png'},
-                    { id: 22, name: 'Diana', icon: '../assets/charactericons/Diana.png'},
-                    { id: 23, name: 'Dr. Mundo', icon: '../assets/charactericons/Dr.png'},
-                    { id: 24, name: 'Draven', icon: '../assets/charactericons/Draven.png'},
-                    { id: 25, name: 'Ekko', icon: '../assets/charactericons/Ekko.png'},
-                    { id: 26, name: 'Elise', icon: '../assets/charactericons/Elise.png'},
-                    { id: 27, name: 'Evelynn', icon: '../assets/charactericons/Evelynn.png'},
-                    { id: 28, name: 'Ezreal', icon: '../assets/charactericons/Ezreal.png'},
-                    { id: 29, name: 'Fiddlesticks', icon: '../assets/charactericons/Fiddlesticks.png'},
-                    { id: 30, name: 'Fiora', icon: '../assets/charactericons/Fiora.png'},
-                    { id: 31, name: 'Fizz', icon: '../assets/charactericons/Fizz.png'},
-                    { id: 32, name: 'Galio', icon: '../assets/charactericons/Galio.png'},
-                    { id: 33, name: 'Gangplank', icon: '../assets/charactericons/Gangplank.png'},
-                    { id: 34, name: 'Garen', icon: '../assets/charactericons/Garen.png'},
-                    { id: 35, name: 'Gnar', icon: '../assets/charactericons/Gnar.png'},
-                    { id: 36, name: 'Gragas', icon: '../assets/charactericons/Gragas.png'},
-                    { id: 37, name: 'Graves', icon: '../assets/charactericons/GravesIcon.png'},
-                    { id: 38, name: 'Gwen', icon: '../assets/charactericons/Gwen.png'},
-                    { id: 39, name: 'Hecarim', icon: '../assets/charactericons/HecarimIcon.png'},
-                    { id: 40, name: 'Heimerdinger', icon: '../assets/charactericons/HeimerdingerIcon.png'},
-                    { id: 41, name: 'Hwei', icon: '../assets/charactericons/Hwei.png'},
-                    { id: 42, name: 'Illaoi', icon: '../assets/charactericons/Illaoi.png'}
+                        { id: 1, name: 'Aatrox', icon: '/static/assets/charactericons/Aatrox.png' },
+                        { id: 2, name: 'Ahri', icon: '/static/assets/charactericons/Ahri.png' },
+                        { id: 3, name: 'Akali', icon: '/static/assets/charactericons/Akali.png' },
+                        { id: 4, name: 'Akshan', icon: '/static/assets/charactericons/Akshan.png' },
+                        { id: 5, name: 'Alistar', icon: '/static/assets/charactericons/Alistar.png' },
+                        { id: 6, name: 'Ambessa', icon: '/static/assets/charactericons/Ambessa.png' },
+                        { id: 7, name: 'Amumu', icon: '/static/assets/charactericons/Amumu.png' },
+                        { id: 8, name: 'Anivia', icon: '/static/assets/charactericons/Anivia.png' },
+                        { id: 9, name: 'Annie', icon: '/static/assets/charactericons/Annie.png' },
+                        { id: 10, name: 'Aphelios', icon: '/static/assets/charactericons/Aphelios.png' },
+                        { id: 11, name: 'Ashe', icon: '/static/assets/charactericons/Ashe.png' },
+                        { id: 12, name: 'Aurelion Sol', icon: '/static/assets/charactericons/AurelionSol.png' },
+                        { id: 13, name: 'Aurora', icon: '/static/assets/charactericons/Aurora.png' },
+                        { id: 14, name: 'Azir', icon: '/static/assets/charactericons/Azir.png' },
+                        { id: 15, name: 'Bard', icon: '/static/assets/charactericons/Bard.png' },
+                        { id: 16, name: "Bel'Veth", icon: '/static/assets/charactericons/BelVeth.png' },
+                        { id: 17, name: 'Blitzcrank', icon: '/static/assets/charactericons/Blitzcrank.png' },
+                        { id: 18, name: 'Cassiopeia', icon: '/static/assets/charactericons/Cassiopeia.png' },
+                        { id: 19, name: "Cho'Gath", icon: '/static/assets/charactericons/ChoGath.png' },
+                        { id: 20, name: 'Corki', icon: '/static/assets/charactericons/Corki.png' },
+                        { id: 21, name: 'Darius', icon: '/static/assets/charactericons/Darius.png' },
+                        { id: 22, name: 'Diana', icon: '/static/assets/charactericons/Diana.png' },
+                        { id: 23, name: 'Dr. Mundo', icon: '/static/assets/charactericons/DrMundo.png' },
+                        { id: 24, name: 'Draven', icon: '/static/assets/charactericons/Draven.png' },
+                        { id: 25, name: 'Ekko', icon: '/static/assets/charactericons/Ekko.png' },
+                        { id: 26, name: 'Elise', icon: '/static/assets/charactericons/Elise.png' },
+                        { id: 27, name: 'Evelynn', icon: '/static/assets/charactericons/Evelynn.png' },
+                        { id: 28, name: 'Ezreal', icon: '/static/assets/charactericons/Ezreal.png' },
+                        { id: 29, name: 'Fiddlesticks', icon: '/static/assets/charactericons/Fiddlesticks.png' },
+                        { id: 30, name: 'Fiora', icon: '/static/assets/charactericons/Fiora.png' },
+                        { id: 31, name: 'Fizz', icon: '/static/assets/charactericons/Fizz.png' },
+                        { id: 32, name: 'Galio', icon: '/static/assets/charactericons/Galio.png' },
+                        { id: 33, name: 'Gangplank', icon: '/static/assets/charactericons/Gangplank.png' },
+                        { id: 34, name: 'Garen', icon: '/static/assets/charactericons/Garen.png' },
+                        { id: 35, name: 'Gnar', icon: '/static/assets/charactericons/Gnar.png' },
+                        { id: 36, name: 'Gragas', icon: '/static/assets/charactericons/Gragas.png' },
+                        { id: 37, name: 'Graves', icon: '/static/assets/charactericons/GravesIcon.png' },
+                        { id: 38, name: 'Gwen', icon: '/static/assets/charactericons/Gwen.png' },
+                        { id: 39, name: 'Hecarim', icon: '/static/assets/charactericons/HecarimIcon.png' },
+                        { id: 40, name: 'Heimerdinger', icon: '/static/assets/charactericons/HeimerdingerIcon.png' },
+                        { id: 41, name: 'Hwei', icon: '/static/assets/charactericons/Hwei.png' },
+                        { id: 42, name: 'Illaoi', icon: '/static/assets/charactericons/Illaoi.png' }
                 ];
 
-                const grid = document.getElementById('character-grid');
-                const detail = document.getElementById('character-detail');
-                const content = document.getElementById('detail-content');
+                
 
                 characters.forEach(char => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <div class="icon">
-                    <img src="${char.icon}" alt="${char.name}" style="width: 120px; height: 120px;" />
-                </div>
-                <div class="name">${char.name}</div>
-      `      ;
-            card.onclick = () => showDetail(char);
-            grid.appendChild(card);
-        });
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.innerHTML = `
+                                <div class="icon">
+                                        <img src="${char.icon}" alt="${char.name}" style="width: 120px; height: 120px;" />
+                                </div>
+                                <div class="name">${char.name}</div>
+                        `;
+                        card.onclick = () => {
+                                window.location.href = "/character_details?id=" + char.id;
+                        };
+                        grid.appendChild(card);
+                });
+        </script>
 
-        function showDetail(char) {
-            const url = `character-details.html?id=${char.id}`;
-            window.location.href = url;
-        }
+            
 
-        function closeDetail() {
-            detail.classList.add('hidden');
-            content.innerHTML = '';
-        }
-    </script>
+            <div class="grid" id="character-grid"></div>
+        </div>
+    </div>
 
 
     <div class="footer">
