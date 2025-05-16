@@ -1,23 +1,94 @@
+.guides-content {
+    background-color: rgba(30, 35, 40, 0.8);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    max-width: 1000px;
+    margin: 20px auto;
+    color: #f0e6d2;
+    font-size: 16px;
+    text-align: center;
+}
+
+h2 {
+    color: #cdfafa;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #3f464e;
+    padding-bottom: 10px;
+    font-size: 1.5rem;
+}
+
 .guide-list {
-    max-height: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 600px;
     overflow-y: auto;
-    padding: 0;
-    list-style: none;
+    margin-top: 20px;
 }
 
 .guide-item {
+    background-color: #111318;
+    border-radius: 8px;
+    padding: 20px;
+    color: #cdfafa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s;
+}
 
-    border: 1px solid #ccc;
-    margin-bottom: 15px;
-    padding: 15px;
-    border-radius: 10px;
-    word-wrap: break-word; /* ensures long text wraps */
-    white-space: normal;
+.guide-item:hover {
+    background-color: #1e2328;
+}
 
+.guide-item h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    color: #cdfafa;
 }
 
 .guide-item p {
     max-height: 150px;
     overflow-y: auto;
     word-break: break-word;
+    font-size: 14px;
+    color: #a09b8c;
+}
+
+/* Buttons */
+button {
+    background-color: #253449;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #c7d5e0;
+}
+
+/* Center buttons if needed */
+.content a {
+    display: inline-block;
+    text-align: center;
+}
+
+.guide-buttons {
+    background-color: rgba(30, 35, 40, 0.8);
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 1000px;
+    margin: 0 auto 40px auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 100px;
+    justify-content: center;
 }
