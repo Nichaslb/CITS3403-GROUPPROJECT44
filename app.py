@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
@@ -7,8 +7,11 @@ import time
 from functools import wraps
 from flask_migrate import Migrate
 
+from flask_login import login_required, current_user
+
+
 # 从models导入数据库模型
-from models import db, User, GameModeStats, MatchRecord, Friend  # 确保从models导入Friend
+from models import db, User, GameModeStats, MatchRecord, Friend, Guides , SharedGuide # 确保从models导入Friend
 from forms import LoginForm, RegisterForm
 from routes.riot_api import fetch_puuid, fetch_rank_info, fetch_match_list, fetch_match_details, get_api_key
 
@@ -114,7 +117,7 @@ def login():
             # 设置会话持久性，如果"记住我"被选中，则为3天 // Set session persistence, if "remember me" is selected, then for 3 days
             if remember:
                 session.permanent = True
-                app.permanent_session_lifetime = 60 * 60 * 24 * 3  # 3天
+                app.permanent_session_lifetime = 60 * 60 * 24 * 3  # 3天 3 days
             
             # 重定向到下一页或仪表板 // Redirect to the next page or dashboard
             next_page = request.args.get('next')
@@ -152,6 +155,47 @@ def friends():
     # 获取当前用户
     user = User.query.get(session['user_id'])
     return render_template('friends.html', user=user)
+
+@app.route('/guide')
+@login_required
+def guide():
+    return render_template('guide.html')
+
+@app.route('/patchnotes')
+def patchnotes():
+    return render_template('patchnotes.html')
+
+
+@app.route('/characters')
+def characters():
+    return render_template('characters.html')
+
+
+@app.route('/create_guide')
+def create_guide():
+    if 'user_id' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+    return render_template('create_guide.html', user=user)
+
+
+@app.route('/guide_inbox')
+@login_required
+def guide_inbox():
+    return render_template('guide_inbox.html')
+
+@app.route('/user_guide')
+def user_guide():
+    if 'user_id' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
+    
+    user = User.query.get(session['user_id'])
+    guides = user.guides.order_by(Guides.created_at.desc()).all()
+    return render_template('user_guide.html', user=user, guides=guides, username=user.username)
+
 
 @app.route('/update_profile', methods=['POST'])
 @login_required
@@ -530,6 +574,64 @@ def api_remove_friend():
         "status": "success",
         "message": f"已从好友列表中移除 {friend_username}"
     })
+
+
+from flask import session
+
+@app.route('/submit_guide', methods=['POST'])
+def submit_guide():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Please log in first.')
+        return redirect(url_for('login'))
+
+    title = request.form.get('title')
+    content = request.form.get('content')
+
+    if not title or not content:
+        flash('All fields are required.')
+        return redirect(url_for('create_guide'))
+
+    if len(title) > 100 or len(content) > 500:
+        flash('Title or content too long.')
+        return redirect(url_for('create_guide'))
+
+    new_guide = Guides(title=title, content=content, user_id=user_id)
+    db.session.add(new_guide)
+    db.session.commit()
+
+    flash('Guide created successfully!')
+    return redirect(url_for('user_guides', user_id=user_id))
+
+
+@app.route('/user/<int:user_id>/guides')
+def user_guides(user_id):
+    session_user_id = session.get('user_id')
+    if not session_user_id:
+        flash('Please log in first.')
+        return redirect(url_for('login'))
+
+    if user_id != session_user_id:
+        flash('You can only view your own guides.')
+        return redirect(url_for('dashboard'))
+
+    user = User.query.get_or_404(user_id)
+    guides = user.guides.order_by(Guides.created_at.desc()).all()
+    return render_template('user_guide.html', user=user, guides=guides)
+
+@app.route('/delete_guide/<int:guide_id>', methods=['POST'])
+@login_required
+def delete_guide(guide_id):
+    guide = Guides.query.get_or_404(guide_id)
+    # Check if the guide belongs to the logged-in user
+    if guide.user_id != session['user_id']:
+        flash('You can only delete your own guides.')
+        return redirect(url_for('user_guide'))
+
+    db.session.delete(guide)
+    db.session.commit()
+    flash('Guide deleted successfully.')
+    return redirect(url_for('user_guide'))
 
 if __name__ == '__main__':
     app.run(debug=True)

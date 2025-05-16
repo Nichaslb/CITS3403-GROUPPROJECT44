@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    cursor: url('/static/assets/icons/blue-pointer.png'), auto;
 }
 
 body {
@@ -87,7 +88,6 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
     border: none;
-    cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;

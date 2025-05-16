@@ -1,79 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>League of Stats - Dashboard</title>
-    <link rel="stylesheet" href="static/style/mainpage.css">
-    <link rel="stylesheet" href="static/style/guide.css">
-    <link rel="stylesheet" href="static/style/cursor.css">
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>League of Stats - Guides</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style/mainpage.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style/guide.css') }}" />
 </head>
 
 <body>
     <div class="main-container">
         <div class="sidebar">
-            <div class="logo-area">
-                LEAGUE OF STATS
-            </div>
-            
+            <div class="logo-area">LEAGUE OF STATS</div>
+
             <div class="sidebar-menu">
-                <a href="dashboard.html">
+                <a href="{{ url_for('dashboard') }}">
                     <div class="icon-placeholder">
-                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Dashboard Icon" />
                     </div>
                     Dashboard
                 </a>
-                <a href="characters.html">
-                    <div class="icon-placeholder">
-                        <img src="../assets/icons/characters.png" alt="characters Icon">
-                    </div>
-                    Characters
-                </a>
-                <a href="patchnotes.html">
-                    <div class="icon-placeholder">
-                        <img src="../assets/icons/patch.png" alt="patch Icon">
-                    </div>
-                    Patch Notes
-                </a>
 
-                <a href="Share.html">
+                <a href="{{ url_for('share') }}">
                     <div class="icon-placeholder">
-                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Share Icon" />
                     </div>
                     Share
                 </a>
 
-                <a href="Guide.html" class="active">
+                <a href="{{ url_for('friends') }}">
                     <div class="icon-placeholder">
-                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Friends Icon" />
+                    </div>
+                    Friends
+                </a>
+
+                <a href="{{ url_for('guide') }}" class="active">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Guides Icon" />
                     </div>
                     Guides
                 </a>
 
-                <a href="profile.html" class="profile-button">
-                    <div class="profile-icon">
-                        <!-- here is the user's avatar, we will build this function later -->
+                <a href="{{ url_for('characters') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='static/assets/icons/characters.png') }}" alt="Characters Icon" />
                     </div>
-                    Profile
+                    Champions
                 </a>
 
+                <a href="{{ url_for('patchnotes') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='static/assets/icons/patch.png') }}" alt="Patch Notes Icon" />
+                    </div>
+                    Patch Notes
+                </a>
             </div>
+
+            <a href="{{ url_for('profile') }}" class="profile-button">
+                <div class="profile-icon">
+                    <!-- User avatar placeholder -->
+                </div>
+                Profile
+            </a>
         </div>
 
+        <div class="content">
+            <div class="Title">
+                <h2>Guides</h2>
+            </div>
 
-        <a href="ShareGuide.html" class="ShareGuide"> <!-- Here we should be able to share-->
-            <h3> Share your guide! </h3>
-        </a>
+            <div class="guides-content">
+                <!-- Add guide content here -->
+                <p>Welcome to the League of Stats Guides section! More content coming soon.</p>
+            </div>
 
+            <div class="guide-buttons">
+                <a href="{{ url_for('create_guide') }}">
+                    <button>Create a New Guide</button>
+                </a>    
+            
+                <a href="{{ url_for('guide_inbox') }}">
+                    <button>See New Guides</button>
+                </a>    
+            
+                <a href="{{ url_for('user_guide') }}">
+                    <button>See your guides</button>
+                </a>  
+            </div>
+            
 
-
-
-
+        </div>
+    </div>
 
     <div class="footer">
         League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
     </div>
-
 </body>
 </html>

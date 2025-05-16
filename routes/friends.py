@@ -3,7 +3,7 @@ from flask import jsonify, request, session
 from datetime import datetime
 from models import db, User
 
-# 新增一个Friend模型
+# 新增一个Friend模型 // Add a Friend model
 class Friend(db.Model):
     __tablename__ = 'friends'
     
@@ -12,18 +12,17 @@ class Friend(db.Model):
     friend_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # 建立与User的关系
+    # 建立与User的关系 // Establish a relationship with User
     user = db.relationship('User', foreign_keys=[user_id], backref=db.backref('friends_added', lazy=True))
     friend = db.relationship('User', foreign_keys=[friend_id], backref=db.backref('friends_of', lazy=True))
     
     def __repr__(self):
         return f'<Friend {self.user_id}-{self.friend_id}>'
 
-# 添加用户最后登录时间字段
-# 需要在User模型中添加last_login字段
-# 在models.py中的User类中添加: last_login = db.Column(db.DateTime)
-# 并在login函数中更新last_login: user.last_login = datetime.utcnow()
-
+# 添加用户最后登录时间字段 // Add last login time field to User model
+# 需要在User模型中添加last_login字段 // You need to add the last_login field in the User model
+# 在models.py中的User类中添加: last_login = db.Column(db.DateTime) // Add: last_login = db.Column(db.DateTime)
+# 并在login函数中更新last_login: user.last_login = datetime.utcnow() // And update last_login in the login function: user.last_login = datetime.utcnow()
 # 搜索用户
 def search_user(username, exact=False):
     """
@@ -31,17 +30,22 @@ def search_user(username, exact=False):
     params:
         username: 要搜索的用户名
         exact: 是否为精确匹配
+
+    Search for users by username
+    params:
+        username: username to search for
+        exact: whether it is an exact match     
     """
     current_user_id = session.get('user_id')
     
     if exact:
-        # 精确匹配
+        # 精确匹配 // Exact match
         users = User.query.filter(
             User.id != current_user_id,
             User.username == username
         ).all()
     else:
-        # 模糊匹配
+        # 模糊匹配 // Fuzzy match
         users = User.query.filter(
             User.id != current_user_id,
             User.username.like(f'%{username}%')
@@ -59,17 +63,17 @@ def search_user(username, exact=False):
     
     return user_list
 
-# 获取好友列表
+# 获取好友列表 // Get friend list
 def get_friends():
-    """获取当前用户的好友列表"""
+    """获取当前用户的好友列表 // Get the current user's friend list"""
     current_user_id = session.get('user_id')
     
-    # 查询好友关系
+    # 查询好友关系 // Query friend relationships
     friends = Friend.query.filter_by(user_id=current_user_id).all()
     
     friend_list = []
     for friend_rel in friends:
-        # 获取好友的用户信息
+        # 获取好友的用户信息 // Get friend's user information
         friend = User.query.get(friend_rel.friend_id)
         if friend:
             friend_list.append({
@@ -83,12 +87,12 @@ def get_friends():
     
     return friend_list
 
-# 添加好友
+# 添加好友 // Add friend
 def add_friend(friend_id):
     """添加好友关系"""
     current_user_id = session.get('user_id')
     
-    # 检查是否已经是好友
+    # 检查是否已经是好友 // Check if already friends
     existing = Friend.query.filter_by(
         user_id=current_user_id, 
         friend_id=friend_id
@@ -97,16 +101,16 @@ def add_friend(friend_id):
     if existing:
         return {"status": "error", "message": "已经是好友"}
     
-    # 检查用户是否存在
+    # 检查用户是否存在 // Check if user exists
     friend = User.query.get(friend_id)
     if not friend:
         return {"status": "error", "message": "用户不存在"}
     
-    # 添加好友关系
+    # 添加好友关系 // Add friend relationship
     new_friend = Friend(user_id=current_user_id, friend_id=friend_id)
     db.session.add(new_friend)
     
-    # 互相添加（可选）
+    # 互相添加（可选）// Optionally add each other
     new_friend_back = Friend(user_id=friend_id, friend_id=current_user_id)
     db.session.add(new_friend_back)
     
@@ -119,10 +123,10 @@ def add_friend(friend_id):
 
 # 删除好友
 def remove_friend(friend_id):
-    """删除好友关系"""
+    """删除好友关系 // Remove friend relationship"""
     current_user_id = session.get('user_id')
     
-    # 查找好友关系
+    # 查找好友关系 // Find friend relationship
     friend_rel = Friend.query.filter_by(
         user_id=current_user_id, 
         friend_id=friend_id
@@ -131,14 +135,14 @@ def remove_friend(friend_id):
     if not friend_rel:
         return {"status": "error", "message": "好友关系不存在"}
     
-    # 获取好友用户名
+    # 获取好友用户名 // Get friend's username
     friend = User.query.get(friend_id)
     friend_username = friend.username if friend else "未知用户"
     
-    # 删除好友关系
+    # 删除好友关系 // Delete friend relationship
     db.session.delete(friend_rel)
     
-    # 删除对方的好友关系（如果存在）
+    # 删除对方的好友关系（如果存在）// Delete the other party's friend relationship (if exists)
     friend_rel_back = Friend.query.filter_by(
         user_id=friend_id, 
         friend_id=current_user_id

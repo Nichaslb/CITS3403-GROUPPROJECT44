@@ -5,7 +5,7 @@
   <title>Character Detail</title>
   <link rel="stylesheet" href="static/style/mainpage.css">
   <link rel="stylesheet" href="static/style/characterdetails.css" />
-  <link rel="stylesheet" href="static/style/cursor.css">
+
 
 </head>
 
@@ -13,51 +13,61 @@
   <div class="main-container">
     <div class="sidebar">
         <div class="logo-area">
-            LEAGUE OF STATS
+          LEAGUE OF STATS
         </div>
         
-        <div class="sidebar-menu">
-            <a href="dashboard.html">
-                <div class="icon-placeholder">
-                    <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
-                </div>
-                Dashboard
-            </a>
-            <a href="characters.html" class="active">
-                <div class="icon-placeholder">
-                    <img src="../assets/icons/characters.png" alt="characters Icon">
-                </div>
-                Characters
-            </a>
-            <a href="patchnotes.html">
-                <div class="icon-placeholder">
-                    <img src="../assets/icons/patch.png" alt="patch Icon">
-                </div>
-                Patch Notes
-            </a>
+            <div class="sidebar-menu">
+                <a href="{{ url_for('dashboard') }}" class="active">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                    </div>
+                    Dashboard
+                </a>
+                  
+                <a href="{{ url_for('share') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                    </div>
+                    Share
+                </a>
 
-            <a href="Share.html">
-                <div class="icon-placeholder">
-                    <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
-                </div>
-                Share
-            </a>
+                <a href="{{ url_for('friends') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                    </div>
+                    Friends
+                </a>
 
-            <a href="Guide.html" >
-                <div class="icon-placeholder">
-                    <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
-                </div>
-                Guides
-            </a>
+                <a href="guide.html" class="active">
+                    <div class="icon-placeholder">
+                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                    </div>
+                    Guides
+                </a>
 
-            <a href="profile.html" class="profile-button">
+                <a href="characters.html" class="active">
+                    <div class="icon-placeholder">
+                        <img src="../assets/icons/characters.png" alt="characters Icon">
+                    </div>
+                    Champions
+                </a>
+
+                <a href="patchnotes.html"  class="active">
+                    <div class="icon-placeholder">
+                        <img src="../assets/icons/patch.png" alt="patch Icon">
+                    </div>
+                    Patch Notes
+                </a>
+
+
+            </div>
+            <a href="{{ url_for('profile') }}" class="profile-button">
                 <div class="profile-icon">
                     <!-- here is the user's avatar, we will build this function later -->
                 </div>
                 Profile
             </a>
         </div>
-    </div>
 
 
   <div id="detail-character" class="detail">

@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>League of Stats - Profile</title>
-    <link rel="stylesheet" href="static/style/profile.css">
-    <link rel="stylesheet" href="static/style/mainpage.css">
-    <link rel="stylesheet" href="static/style/cursor.css">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style/profile.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style/mainpage.css') }}">
 </head>
 
 <body>
     <div class="main-container">
+        <!-- Sidebar Navigation -->
         <div class="sidebar">
-            <div class="logo-area">
-                LEAGUE OF STATS
-            </div>
+            <div class="logo-area">LEAGUE OF STATS</div>
             
             <div class="sidebar-menu">
                 <a href="{{ url_for('dashboard') }}">
@@ -30,26 +27,46 @@
                     </div>
                     Share
                 </a>
-
                 <a href="{{ url_for('friends') }}">
                     <div class="icon-placeholder">
-                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Friends Icon">
                     </div>
                     Friends
                 </a>
+                <a href="{{ url_for('guide') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='static/assets/icons/dashboard.png') }}" alt="Guide Icon">
+                    </div>
+                    Guides
+                </a>
+                <a href="{{ url_for('characters') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='static/assets/icons/characters.png') }}" alt="Characters Icon">
+                    </div>
+                    Champions
+                </a>
+                <a href="{{ url_for('patchnotes') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='static/assets/icons/patch.png') }}" alt="Patch Notes Icon">
+                    </div>
+                    Patch Notes
+                </a>
             </div>
-            <a href="{{ url_for('profile') }}" class="profile-button active">
+
+            <a href="{{ url_for('profile') }}" class="profile-button">
                 <div class="profile-icon">
-                    <!-- 用户头像 -->
+                    <!-- Placeholder for User Avatar -->
                 </div>
                 Profile
             </a>
         </div>
-        
+
+        <!-- Profile Content -->
         <div class="content">
             <div class="profile-section">
                 <h1>Your Profile</h1>
-                
+
+                <!-- Flash Messages -->
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
@@ -57,14 +74,15 @@
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
-                
+
+                <!-- Profile Information -->
                 <div class="profile-info">
                     <div class="info-item">
                         <h3>Account Information</h3>
                         <p><strong>Username:</strong> {{ user.username }}</p>
                         <p><strong>Email:</strong> {{ user.email }}</p>
                     </div>
-                    
+
                     <div class="info-item">
                         <h3>Game Information</h3>
                         <form method="POST" action="{{ url_for('update_profile') }}" class="update-form">
@@ -72,12 +90,12 @@
                                 <label for="riot_id">Riot ID:</label>
                                 <input type="text" id="riot_id" name="riot_id" value="{{ user.riot_id or '' }}">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="tagline">Tagline:</label>
                                 <input type="text" id="tagline" name="tagline" value="{{ user.tagline or '' }}">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="region">Region:</label>
                                 <select id="region" name="region">
@@ -88,21 +106,23 @@
                                     <option value="oceania" {% if user.region == 'oceania' %}selected{% endif %}>Oceania</option>
                                 </select>
                             </div>
-                            
+
                             <button type="submit" class="update-btn">Update Profile</button>
                         </form>
                     </div>
                 </div>
-                
+
+                <!-- Logout Section -->
                 <div class="logout-section">
                     <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
                 </div>
             </div>
         </div>
     </div>
-    
+
+    <!-- Footer -->
     <div class="footer">
-        League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
+        League of Stats v1.0 • CITS3403 GROUP44 • This website has no relation to RIOT GAMES
     </div>
 </body>
 </html>

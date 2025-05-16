@@ -4,6 +4,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Arial', sans-serif;
+    cursor: url('/static/assets/icons/blue-pointer.png'), auto;
 }
 
 body {
@@ -116,7 +117,6 @@ body {
     border-radius: 8px;
     display: flex;
     align-items: center;
-    cursor: pointer;
     transition: background-color 0.2s, color 0.2s;
     z-index: 2;
     color: #c7d5e0;
