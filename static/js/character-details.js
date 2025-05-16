@@ -1,3 +1,7 @@
+ // code defines a JavaScript array of objects called characters, where each object represents a
+//  League of Legends champion (Aatrox, Ahri, etc.). Each object contains various properties such 
+//  as images, stats, and lore.
+    
     const characters = [
       { id: 1, 
         name: 'Aatrox', 

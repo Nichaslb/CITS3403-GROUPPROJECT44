@@ -1,32 +1,32 @@
 // js/friends.js
 
 document.addEventListener('DOMContentLoaded', function() {
-    // 获取DOM元素
+    // Get the DOM element
     const searchInput = document.getElementById('search-username');
     const searchButton = document.getElementById('search-button');
     const searchResults = document.getElementById('search-results');
     const friendsList = document.getElementById('friends-list');
     
-    // 模板
+    // template
     const searchResultTemplate = document.getElementById('search-result-template');
     const friendItemTemplate = document.getElementById('friend-item-template');
     
-    // 加载好友列表
+    // loading friends list on page load
     loadFriendsList();
     
-    // 搜索按钮点击事件
+    // Search button click event
     searchButton.addEventListener('click', function() {
         searchUser();
     });
     
-    // 回车键搜索
+    // Search input keypress eventt
     searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             searchUser();
         }
     });
     
-    // 搜索用户函数
+    // Function to search for a user
     function searchUser() {
         const username = searchInput.value.trim();
         
@@ -35,23 +35,23 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // 显示加载中
+        //Display loading message
         searchResults.innerHTML = '<div class="loading-friends">Searching...</div>';
         
-        // 调用API搜索用户
+        // Fetching user data from the API
         fetch(`/api/search_user?username=${encodeURIComponent(username)}&exact=true`)
             .then(response => response.json())
             .then(data => {
                 searchResults.innerHTML = '';
                 
                 if (data.status === 'success' && data.data.length > 0) {
-                    // 显示搜索结果
+                    // Results found
                     data.data.forEach(user => {
                         const resultElement = createSearchResultElement(user);
                         searchResults.appendChild(resultElement);
                     });
                 } else {
-                    // 没有找到用户
+                    // User not found
                     showSearchMessage('No user found with that exact username');
                 }
             })
@@ -61,25 +61,25 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
     
-    // 加载好友列表
+    // Function to load the friends list
     function loadFriendsList() {
-        // 显示加载中
+        // Display loading message
         friendsList.innerHTML = '<div class="loading-friends">Loading your friends list...</div>';
         
-        // 调用API获取好友列表
+        // Fetching friends list from the API
         fetch('/api/friends')
             .then(response => response.json())
             .then(data => {
                 friendsList.innerHTML = '';
                 
                 if (data.status === 'success' && data.data.length > 0) {
-                    // 显示好友列表
+                    // Successfully loaded friends list
                     data.data.forEach(friend => {
                         const friendElement = createFriendElement(friend);
                         friendsList.appendChild(friendElement);
                     });
                 } else {
-                    // 没有好友
+                    // No friends found
                     friendsList.innerHTML = '<div class="no-friends-message">You haven\'t added any friends yet</div>';
                 }
             })
@@ -89,11 +89,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
     
-    // 创建搜索结果元素
+    // Search results element creationn
     function createSearchResultElement(user) {
         const template = searchResultTemplate.content.cloneNode(true);
         
-        // 填充数据
+        // Filing data
         template.querySelector('.result-username').textContent = `${user.username} (ID: ${user.id})`;
         
         const riotIdText = user.riot_id && user.tagline ? 
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         template.querySelector('.result-riot-id').textContent = riotIdText;
         
-        // 添加好友按钮事件
+        // Add friend button event
         const addButton = template.querySelector('.add-friend-btn');
         addButton.addEventListener('click', function() {
             addFriend(user.id);
@@ -111,11 +111,11 @@ document.addEventListener('DOMContentLoaded', function() {
         return template;
     }
     
-    // 创建好友元素
+    // Add friend element creation
     function createFriendElement(friend) {
         const template = friendItemTemplate.content.cloneNode(true);
         
-        // 填充数据
+        // Filling data
         template.querySelector('.friend-username').textContent = `${friend.username} (ID: ${friend.id})`;
         
         const riotIdText = friend.riot_id && friend.tagline ? 
@@ -124,12 +124,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         template.querySelector('.friend-riot-id').textContent = riotIdText;
         
-        // 格式化最后登录时间
+        // Last login date formatting
         const lastLogin = new Date(friend.last_login);
         const formattedDate = lastLogin.toLocaleString();
         template.querySelector('.friend-last-login').textContent = `Last login: ${formattedDate}`;
         
-        // 删除好友按钮事件
+        // Delete friend button event
         const removeButton = template.querySelector('.remove-friend-btn');
         removeButton.addEventListener('click', function() {
             removeFriend(friend.id);
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return template;
     }
     
-    // 添加好友
+    // Add friend function
     function addFriend(friendId) {
         fetch('/api/add_friend', {
             method: 'POST',
@@ -150,12 +150,12 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                // 显示成功消息
+                // Success message
                 showSearchMessage(data.message, 'success');
-                // 重新加载好友列表
+                // Reload friends list
                 loadFriendsList();
             } else {
-                // 显示错误消息
+                // Error message
                 showSearchMessage(data.message || 'Failed to add friend');
             }
         })
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // 删除好友
+    // Remove friend function
     function removeFriend(friendId) {
         if (!confirm('Are you sure you want to remove this friend?')) {
             return;
@@ -181,27 +181,27 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                // 显示成功消息
+                // Success message
                 const successMessage = document.createElement('div');
                 successMessage.className = 'success-message';
                 successMessage.textContent = data.message;
                 friendsList.insertBefore(successMessage, friendsList.firstChild);
                 
-                // 短暂显示后删除消息
+                // Temporary display and remove
                 setTimeout(() => {
                     successMessage.remove();
                 }, 3000);
                 
-                // 重新加载好友列表
+                // Reload friends list
                 loadFriendsList();
             } else {
-                // 显示错误消息
+                // Error message
                 const errorMessage = document.createElement('div');
                 errorMessage.className = 'error-message';
                 errorMessage.textContent = data.message || 'Failed to remove friend';
                 friendsList.insertBefore(errorMessage, friendsList.firstChild);
                 
-                // 短暂显示后删除消息
+                // Temporary display and remove
                 setTimeout(() => {
                     errorMessage.remove();
                 }, 3000);
@@ -214,14 +214,14 @@ document.addEventListener('DOMContentLoaded', function() {
             errorMessage.textContent = 'An error occurred while removing friend';
             friendsList.insertBefore(errorMessage, friendsList.firstChild);
             
-            // 短暂显示后删除消息
+            // Temporary display message
             setTimeout(() => {
                 errorMessage.remove();
             }, 3000);
         });
     }
     
-    // 显示搜索消息
+    // Show search message function
     function showSearchMessage(message, type = 'error') {
         searchResults.innerHTML = '';
         const messageElement = document.createElement('div');
