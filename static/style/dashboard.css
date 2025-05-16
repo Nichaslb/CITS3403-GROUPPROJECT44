@@ -493,3 +493,376 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* 红色方框内的分析按钮样式 */
+.quick-analyze-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -40px; /* 调整位置，使其位于欢迎信息右侧 */
+}
+
+#quick-analyze-button {
+    background-color: #3273dc;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#quick-analyze-button:hover {
+    background-color: #2160c4;
+}
+
+/* 弹出提示框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #1d2733;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    color: #e6e9ed;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.modal-title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.modal-message {
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+
+.modal-cancel {
+    background-color: #4b5563;
+    color: white;
+}
+
+.modal-confirm {
+    background-color: #3273dc;
+    color: white;
+}
+
+/* 添加到现有的dashboard.css文件中 */
+
+/* 分析区域样式 */
+.analysis-section, .fun-stats-section {
+    background-color: #1d2733;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+}
+
+.analysis-section h2, .fun-stats-section h2 {
+    margin: 0 0 20px 0;
+    color: #fff;
+    font-size: 24px;
+    border-bottom: 1px solid #2a3f5a;
+    padding-bottom: 15px;
+}
+
+/* 分析卡片网格 */
+.analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.analysis-card {
+    background-color: #2a3f5a;
+    border-radius: 10px;
+    padding: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.analysis-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.analysis-card h3 {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #fff;
+    text-align: center;
+    border-bottom: 1px solid #3a4d63;
+    padding-bottom: 10px;
+}
+
+/* 数据列表样式 */
+.data-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.data-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #3a4d63;
+}
+
+.data-item:last-child {
+    border-bottom: none;
+}
+
+.data-name {
+    font-weight: 500;
+}
+
+.data-value {
+    background-color: #3273dc;
+    color: white;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 14px;
+    min-width: 30px;
+    text-align: center;
+}
+
+/* 多杀统计样式 */
+.multikill-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.multikill-item {
+    text-align: center;
+    background-color: #1d2733;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.multikill-label {
+    font-size: 14px;
+    color: #9baec8;
+    margin-bottom: 5px;
+}
+
+.multikill-value {
+    font-size: 22px;
+    font-weight: 600;
+    color: #4ade80;
+}
+
+/* 趣味数据样式 */
+.fun-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.fun-stat-card {
+    background-color: #2a3f5a;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.fun-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.fun-stat-icon {
+    font-size: 24px;
+    margin-right: 15px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1d2733;
+    border-radius: 50%;
+}
+
+.fun-stat-info {
+    flex: 1;
+}
+
+.fun-stat-title {
+    font-size: 14px;
+    color: #9baec8;
+    margin-bottom: 5px;
+}
+
+.fun-stat-value {
+    font-size: 20px;
+    font-weight: 600;
+    color: #66c0f4;
+}
+
+/* 游戏模式卡片样式 */
+.game-modes-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mode-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.mode-name {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.sr-fill {
+    background-color: #4ade80;
+}
+
+.aram-fill {
+    background-color: #f59e0b;
+}
+
+.fun-fill {
+    background-color: #ec4899;
+}
+
+/* 红色方框内的分析按钮样式 */
+.quick-analyze-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -40px; /* 调整位置，使其位于欢迎信息右侧 */
+}
+
+#quick-analyze-button {
+    background-color: #3273dc;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#quick-analyze-button:hover {
+    background-color: #2160c4;
+}
+
+/* 弹出提示框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #1d2733;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    color: #e6e9ed;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.modal-title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.modal-message {
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+
+.modal-cancel {
+    background-color: #4b5563;
+    color: white;
+}
+
+.modal-confirm {
+    background-color: #3273dc;
+    color: white;
+}
+
+/* 响应式设计 */
+@media (max-width: 992px) {
+    .analysis-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .fun-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .fun-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .multikill-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+.analysis-card {
+    padding: 16px;
+    font-size: 14px;
+}
+
+.data-value {
+    font-size: 12px;
+    padding: 2px 8px;
+}
