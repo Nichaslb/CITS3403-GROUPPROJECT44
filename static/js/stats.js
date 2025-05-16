@@ -1,23 +1,23 @@
 // js/stats.js
 document.addEventListener('DOMContentLoaded', function() {
-    // 获取Riot ID信息
+    // Get RiotID
     fetchRiotIdInfo();
     
-    // 尝试获取游戏模式统计数据
+    // Get game mode statistics
     fetchGameModeStats();
     
-    // 分析按钮事件监听
+    // Analyse button event listener
     document.getElementById('analyze-button').addEventListener('click', function() {
         analyzeMatches();
     });
     
-    // 重试按钮事件监听
+    // Rety analyse button event listener
     document.getElementById('retry-button').addEventListener('click', function() {
         fetchGameModeStats();
     });
 });
 
-// 获取Riot ID信息
+// Get Riot ID information
 function fetchRiotIdInfo() {
     fetch('/api/puuid')
         .then(response => response.json())
@@ -39,9 +39,9 @@ function fetchRiotIdInfo() {
         });
 }
 
-// 获取游戏模式统计数据
+// function to fetch game mode stats
 function fetchGameModeStats() {
-    // 显示加载状态
+    // get game mode stats
     document.getElementById('loading-stats').style.display = 'flex';
     document.getElementById('error-stats').style.display = 'none';
     document.getElementById('stats-container').style.display = 'none';
@@ -51,30 +51,30 @@ function fetchGameModeStats() {
     fetch('/api/game_modes_stats')
         .then(response => response.json())
         .then(data => {
-            // 隐藏加载状态
+            // display game mode stats
             document.getElementById('loading-stats').style.display = 'none';
             
             if (data.status === 'success') {
                 if (data.data.total_matches > 0) {
-                    // 显示统计数据
+                    // display game mode stats
                     displayGameModeStats(data.data);
                     document.getElementById('stats-container').style.display = 'grid';
                     
-                    // 如果数据需要更新，显示分析按钮
+                    // if data needs update, show analyse button
                     if (data.needsUpdate) {
                         document.getElementById('analyze-button-container').style.display = 'flex';
                     }
                 } else {
-                    // 没有比赛记录
+                    // When there are no matches
                     document.getElementById('no-matches').style.display = 'block';
                     document.getElementById('analyze-button-container').style.display = 'flex';
                 }
             } else if (data.status === 'error') {
                 if (data.needsAnalysis) {
-                    // 需要分析数据
+                    // if data needs analysis, show analyze button
                     document.getElementById('analyze-button-container').style.display = 'flex';
                 } else {
-                    // 显示错误信息
+                    // error occurred
                     document.getElementById('error-stats').style.display = 'block';
                 }
             }
@@ -86,9 +86,9 @@ function fetchGameModeStats() {
         });
 }
 
-// 显示游戏模式统计数据
+// Display game mode statistics
 function displayGameModeStats(data) {
-    // 设置百分比值和进度条
+    // Percentage and progress bar
     document.getElementById('sr-percentage').textContent = `${data.sr_5v5_percentage}%`;
     document.getElementById('sr-bar').style.width = `${data.sr_5v5_percentage}%`;
     
@@ -99,9 +99,9 @@ function displayGameModeStats(data) {
     document.getElementById('fun-bar').style.width = `${data.fun_modes_percentage}%`;
 }
 
-// 触发比赛分析
+// Function to analyze matches
 function analyzeMatches() {
-    // 显示加载状态
+    // Display loading status
     document.getElementById('loading-stats').style.display = 'flex';
     document.getElementById('error-stats').style.display = 'none';
     document.getElementById('stats-container').style.display = 'none';
@@ -116,11 +116,11 @@ function analyzeMatches() {
     })
         .then(response => response.json())
         .then(data => {
-            // 隐藏加载状态
+            // Hide loading status
             document.getElementById('loading-stats').style.display = 'none';
             
             if (data.status === 'success') {
-                // 显示分析结果
+                // Dispaly analysis results
                 if (data.data.total_matches > 0) {
                     const statsData = {
                         sr_5v5_percentage: data.data.mode_percentages.SR_5v5,
@@ -130,11 +130,11 @@ function analyzeMatches() {
                     displayGameModeStats(statsData);
                     document.getElementById('stats-container').style.display = 'grid';
                 } else {
-                    // 没有比赛记录
+                    // If no matches are found
                     document.getElementById('no-matches').style.display = 'block';
                 }
             } else {
-                // 显示错误信息
+                // Display error message
                 document.getElementById('error-stats').style.display = 'block';
             }
         })
