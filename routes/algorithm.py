@@ -385,11 +385,11 @@ def analyze_game_modes(user_id):
             assists = user_data.get('assists', 0)
             damage_taken = user_data.get('totalDamageTaken', 0)
             items_purchased = user_data.get('itemsPurchased', 0)
-            vision_score = user_data.get('visionScore', 0)  # 添加这行
-            damage_dealt = user_data.get('totalDamageDealtToChampions', 0)  # 添加这行
-            time_played = match_detail_data.get('info', {}).get('gameDuration', 0)  # 添加这行
+            vision_score = user_data.get('visionScore', 0)  
+            damage_dealt = user_data.get('totalDamageDealtToChampions', 0)  
+            time_played = match_detail_data.get('info', {}).get('gameDuration', 0)  
 
-            print(f"收集数据: 视野得分 {vision_score}, 游戏时长 {time_played}, 造成伤害 {damage_dealt}")
+            print(f"收集数据: 视野得分 {vision_score}, gameDuration {time_played}, damage {damage_dealt}")
             print(f"收集数据: 承受伤害 {damage_taken}, 购买装备数 {items_purchased}")
 
             # 确保所有数值都为整数类型
@@ -399,53 +399,52 @@ def analyze_game_modes(user_id):
             analysis_result["fun_stats"]["total_assists"] += int(assists)
             analysis_result["fun_stats"]["total_damage_taken"] += int(damage_taken)
             analysis_result["fun_stats"]["total_items_purchased"] += int(items_purchased)
-            analysis_result["fun_stats"]["total_vision_score"] += int(vision_score)  # 修改这行
-            analysis_result["fun_stats"]["total_time_played"] += int(time_played)  # 修改这行
-            analysis_result["fun_stats"]["total_damage_dealt_to_champions"] += int(damage_dealt)  # 修改这行
+            analysis_result["fun_stats"]["total_vision_score"] += int(vision_score)  
+            analysis_result["fun_stats"]["total_time_played"] += int(time_played)  
+            analysis_result["fun_stats"]["total_damage_dealt_to_champions"] += int(damage_dealt)  #
 
-            print(f"添加趣味数据: 金币 {gold_earned}, KDA {kills}/{deaths}/{assists}")
+            print(f"Adding fun stats: gold {gold_earned}, KDA {kills}/{deaths}/{assists}")
             
-            # 5. 只为5v5对局收集队友和敌人信息
-            queue_id = match_detail_data.get('info', {}).get('queueId', 0)
-            if queue_id in MODE_CATEGORIES['SR_5v5'] or queue_id in MODE_CATEGORIES['ARAM']:  # 支持 5v5 和 ARAM 模式
-                if queue_id in MODE_CATEGORIES['SR_5v5']:
-                    sr_match_count += 1  # 统计 5v5 对局数量
 
-                # 收集我方和敌方英雄数据
+            queue_id = match_detail_data.get('info', {}).get('queueId', 0)
+            if queue_id in MODE_CATEGORIES['SR_5v5'] or queue_id in MODE_CATEGORIES['ARAM']:  # 
+                if queue_id in MODE_CATEGORIES['SR_5v5']:
+                    sr_match_count += 1  
+
+
                 for participant in match_detail_data.get('info', {}).get('participants', []):
                     participant_team_id = participant.get('teamId')
                     participant_champion = participant.get('championName', 'Unknown')
 
-                    # 排除玩家自己
+
                     if participant.get('puuid') != user_puuid:
                         if participant_team_id == team_id:  # 队友
                             analysis_result["ally_champions"][participant_champion] = analysis_result["ally_champions"].get(participant_champion, 0) + 1
-                        else:  # 敌人
+                        else:  
                             analysis_result["enemy_champions"][participant_champion] = analysis_result["enemy_champions"].get(participant_champion, 0) + 1
             
-            # 防止API速率限制
+
             time.sleep(1.2)
             
         except requests.exceptions.RequestException as e:
-            print(f"获取对局 {match_id} 详情失败: {str(e)}")
+            print(f"Get match {match_id} failed: {str(e)}")
             continue
     
-    # 计算平均每局多杀次数
+
     if match_count > 0:
         analysis_result["multikill_stats"]["average"] = round(analysis_result["multikill_stats"]["total"] / match_count, 2)
     
     print(f"整理分析数据，处理了 {match_count} 场比赛...")
     
-    # 按出现次数排序各数据
+
     analysis_result["favorite_champions"] = dict(sorted(analysis_result["favorite_champions"].items(), key=lambda x: x[1], reverse=True))
     analysis_result["favorite_positions"] = dict(sorted(analysis_result["favorite_positions"].items(), key=lambda x: x[1], reverse=True))
     
-    # 仅当有5v5对局时才排序敌我英雄数据
     if sr_match_count > 0:
         analysis_result["enemy_champions"] = dict(sorted(analysis_result["enemy_champions"].items(), key=lambda x: x[1], reverse=True))
         analysis_result["ally_champions"] = dict(sorted(analysis_result["ally_champions"].items(), key=lambda x: x[1], reverse=True))
     
-    # 添加平均值到趣味数据
+
     if match_count > 0:
         analysis_result["fun_stats"]["avg_gold_per_match"] = round(analysis_result["fun_stats"]["total_gold_earned"] / match_count)
         analysis_result["fun_stats"]["avg_kills_per_match"] = round(analysis_result["fun_stats"]["total_kills"] / match_count, 1)
@@ -456,10 +455,10 @@ def analyze_game_modes(user_id):
         analysis_result["fun_stats"]["avg_vision_score"] = round(analysis_result["fun_stats"]["total_vision_score"] / match_count, 1)
         analysis_result["fun_stats"]["avg_damage_per_match"] = round(analysis_result["fun_stats"]["total_damage_dealt_to_champions"] / match_count)
     
-    # 将分析结果添加到返回数据中
+
     result["data"]["detailed_analysis"] = analysis_result
     
-    print(f"分析完成，成功处理 {match_count} 场对局的详细数据")
-    print(f"详细分析结果: {analysis_result}")
+    print(f"Done，Analyzed {match_count} matches")
+    print(f"result: {analysis_result}")
     
     return result

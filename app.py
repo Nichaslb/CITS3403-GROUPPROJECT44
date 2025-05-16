@@ -7,31 +7,31 @@ import time
 from functools import wraps
 from flask_migrate import Migrate
 
-# 从models导入数据库模型
+
 from models import db, User, GameModeStats, MatchRecord, Friend,DetailedAnalysis
 from forms import LoginForm, RegisterForm
 from routes.riot_api import fetch_puuid, fetch_rank_info, fetch_match_list, fetch_match_details, get_api_key
 
 app = Flask(__name__, 
            template_folder='template',
-           static_url_path='',       # 移除URL前缀 // remove URL prefix
-           static_folder='.')        # 使用项目根目录作为静态文件目录 // Use the project root directory as the static file directory
+           static_url_path='',       # remove URL prefix
+           static_folder='.')        # Use the project root directory as the static file directory
 
 app.config['SECRET_KEY'] = os.urandom(24)
 
-# 配置SQLAlchemy数据库
+# Configure the SQLAlchemy database.
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# 设置Riot API密钥（如果需要从环境变量获取）
+# Set the Riot API key (if it needs to be retrieved from an environment variable).
 app.config['RIOT_API_KEY'] = os.environ.get('RIOT_API_KEY', '')
 
-# 初始化数据库
+# Initialize the database.
 db.init_app(app)
 
 migrate = Migrate(app, db)
 
-# 确保在应用启动前创建所有数据库表
+# Make sure all database tables are created before the app starts.
 with app.app_context():
     db.create_all()
     print("Database tables created or confirmed.")
@@ -57,14 +57,14 @@ def register():
         email = form.email.data
         password = form.password.data
         
-        # 检查用户名或邮箱是否已存在 // Check if username or email already exists
+        # Check if username or email already exists
         existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
         
         if existing_user:
             flash('username or email already exsit', 'error')
             return render_template('signup.html', form=form)
         
-        # 创建新用户 // Create new user
+        # Create new user
         hashed_password = generate_password_hash(password)
         new_user = User(
             username=username,
@@ -72,7 +72,7 @@ def register():
             password=hashed_password
         )
         
-        # 如果表单中有riot_id等字段，则保存这些信息 // If the form has riot_id etc. fields, save this information
+        # If the form has riot_id etc. fields, save this information
         if 'riot_id' in request.form and 'tagline' in request.form and 'region' in request.form:
             riot_id = request.form['riot_id']
             tagline = request.form['tagline']
@@ -98,25 +98,25 @@ def login():
         password = form.password.data
         remember = True if request.form.get('remember') else False
         
-        # 使用ORM查询用户
+        # query user
         user = User.query.filter_by(username=username).first()
         
         if user and check_password_hash(user.password, password):
-            # 更新最后登录时间
+            # update last login time
             user.last_login = datetime.utcnow()
             db.session.commit()
             
-            # 登录成功
+            # Login success
             session.clear()
             session['user_id'] = user.id
             session['username'] = user.username
             
-            # 设置会话持久性，如果"记住我"被选中，则为3天 // Set session persistence, if "remember me" is selected, then for 3 days
+            # Set session persistence, if "remember me" is selected, then for 3 days
             if remember:
                 session.permanent = True
                 app.permanent_session_lifetime = 60 * 60 * 24 * 3  # 3天
             
-            # 重定向到下一页或仪表板 // Redirect to the next page or dashboard
+            # Redirect to the next page or dashboard
             next_page = request.args.get('next')
             if not next_page or not next_page.startswith('/'):
                 next_page = url_for('dashboard')
@@ -142,33 +142,27 @@ def dashboard():
 @app.route('/profile')
 @login_required
 def profile():
-    # 使用ORM查询用户
     user = User.query.get(session['user_id'])
     return render_template('profile.html', user=user)
 
 @app.route('/friends')
 @login_required
 def friends():
-    # 获取当前用户
     user = User.query.get(session['user_id'])
     return render_template('friends.html', user=user)
 
 @app.route('/update_profile', methods=['POST'])
 @login_required
 def update_profile():
-    # 获取表单数据
     riot_id = request.form.get('riot_id', '')
     tagline = request.form.get('tagline', '')
     region = request.form.get('region', '')
     
-    # 获取当前用户
     user = User.query.get(session['user_id'])
     
-    # 检查Riot ID和tagline是否有变化
     riot_id_changed = user.riot_id != riot_id
     tagline_changed = user.tagline != tagline
     
-    # 更新用户资料
     user.riot_id = riot_id
     user.tagline = tagline
     user.region = region
@@ -181,14 +175,14 @@ def update_profile():
             if "puuid" in result:
                 # 更新用户的PUUID字段
                 user.puuid = result["puuid"]
-                flash('Riot账号已验证', 'success')
+                flash('Riot account available', 'success')
             elif "error" in result:
-                flash(f'Riot账号信息验证失败: {result["error"]}', 'error')
-                # 仍然保存用户输入的信息，但提示验证失败
+                flash(f'Riot info incorrect: {result["error"]}', 'error')
+                # 
     
     db.session.commit()
     
-    flash('个人资料已更新', 'success')
+    flash('Updated!', 'success')
     return redirect(url_for('profile'))
 
 @app.route('/share')
@@ -199,23 +193,22 @@ def share():
 @app.route('/api/puuid')
 @login_required
 def api_get_puuid():
-    """获取当前登录用户的PUUID"""
     user = User.query.get(session['user_id'])
     if not user:
-        return jsonify({"status": "error", "message": "找不到用户信息"}), 404
+        return jsonify({"status": "error", "message": "cannot find userinfo "}), 404
     
-    # 验证用户是否设置了riot_id和tagline
+ 
     if not user.riot_id or not user.tagline:
         return jsonify({
             "status": "error", 
-            "message": "未设置Riot ID或Tagline，请先更新个人资料",
+            "message": "Did not set Riot ID or Tagline, please update your profile",
             "needsUpdate": True
         }), 400
     
-    # 获取API密钥
+
     api_key = get_api_key()
     if not api_key:
-        return jsonify({"status": "error", "message": "无法获取API密钥"}), 500
+        return jsonify({"status": "error", "message": "Cant fetch api key"}), 500
     
     # 调用Riot API获取PUUID
     result = fetch_puuid(user.riot_id, user.tagline, api_key)
