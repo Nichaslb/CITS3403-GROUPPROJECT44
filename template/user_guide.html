@@ -29,6 +29,7 @@
                         {% for guide in guides %}
                             <li class="guide-item">
                                 <h3>{{ guide.title }}</h3>
+                                <button class="send-btn" data-guide-id="{{ guide.id }}">Send</button>
                                 <p>{{ guide.content[:300] }}{% if guide.content|length > 300 %}...{% endif %}</p>
                             <em>Created at: {{ guide.created_at.strftime('%Y-%m-%d %H:%M') }}</em>
                             <form action="{{ url_for('delete_guide', guide_id=guide.id) }}" method="post" style="display:inline;">
@@ -40,6 +41,14 @@
             {% else %}
                 <p>You haven't created any guides yet.</p>
             {% endif %}
+
+            
+            <!-- Hidden modal for friend selection -->
+            <div id="friend-modal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #ccc; padding:20px; max-height:300px; overflow-y:auto; z-index:1000;">
+            <h3>Select a Friend to Send Guide</h3>
+            <ul id="friend-list"></ul>
+            <button id="close-friend-modal">Close</button>
+
         </div>
 
 
