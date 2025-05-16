@@ -4,18 +4,48 @@
 
 ### Users can:
 
-- Sign up and log in, where upon signing up the account will link to the player's account in the official game.
+**User Authentication and Account Linking**
+- Users can sign up and log in securely.
+- Upon signing up, the user’s account is linked with their official League of Legends account using Riot ID and tagline, allowing the application to fetch personalized game data for analysis.
 
-- Create guides, with customizable visibility and access settings.
+**User Profile Display**
+- The dashboard displays the player’s in-game username and tagline prominently.
+- Additional metadata such as region, account level, or summoner icon (optional if fetched from API) can also be included to personalize the experience.
 
-- Edit and publish these guides for others to view and learn from.
+**Game Performance Analysis**
+The application provides statistical summaries of player performance including:
+- Multikill stats (double kills, triple kills, quadra kills, penta kills)
+- Kill/death/assist (KDA) ratios and average values across matches
 
-- View and compare player accounts to analyze gameplay and performance.
+**Game Mode Preferences**
+Shows a breakdown of the player’s engagement across different game modes. Each mode is represented as a percentage of total matches played.
 
-- Explore detailed information on champions and lore, enhancing both strategic understanding and immersion in the League of Legends universe.
+**Personal Game Preferences**
+The system identifies and displays:
+- Favourite Champion (most played or highest win rate)
+- Preferred Position (top, mid, jungle, ADC, support)
+- Frequent Ally (user you most often win or play with)
+- Common Enemy (player or champion frequently matched against)
+
+**In-Game Totals Summary**
+Shows tallied match statistics such as:
+- Total matches played
+- Total kills, assists, deaths
+- Total multikill achievements
+- Match count per champion
+
+**Comparison & Social Analysis**
+Users can view other players’ profiles, if they’re added as friends.
+Allows comparison of:
+- Game preferences
+- Statistical performance
+- Champion mastery
+- Enables strategic insights into team synergies, matchup histories, or personal strengths vs weaknesses.
+
+**View and compare player accounts to analyse gameplay and performance.**
 
 
-Contributors to this project are as follows:
+### Contributors to this project are as follows:
 
 -
 |   Student number  | Full name  | Github   |
