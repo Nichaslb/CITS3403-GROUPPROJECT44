@@ -45,7 +45,6 @@ File structure
 
 - Python 3.x installed
 - Flask framework
-- WLED-compatible LED controller
 
 ### Instllation
 
@@ -91,32 +90,17 @@ flask run
 
 ### Testing
 
-**Unit test and selenium test**
-Run the following code to get a unit test and selenium test
-```bash
-python -m unittest tests.test_auth
-python -m unittest tests.systemtest 
-python -m unittest tests.test_without_api
-python -m unittest tests.test_mood_utils
-```
-
 
 **Running Tests**
 
-*To run all tests:*
+Use the following command to run all unit test and selenium tests:
 ```bash
-pytest
+python -m unittest discover -s tests
 ```
 
-*To run specific test files:*
+To run a specific test file:
 ```bash
-pytest tests/test_auth.py
-pytest tests/test_mood_utils.py
-```
-
-*To run tests with coverage:*
-```bash
-pytest --cov=app tests/
+python -m unittest tests.test_app
 ```
 
 **Exiting app**
