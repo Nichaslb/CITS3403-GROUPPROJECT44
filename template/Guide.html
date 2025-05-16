@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>League of Stats - Guides</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='static/style/mainpage.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='static/style/guide.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style/guidetest.css') }}" />
 </head>
 
 <body>
@@ -75,28 +75,20 @@
                 <p>Welcome to the League of Stats Guides section! More content coming soon.</p>
             </div>
 
-
-
-
-
+            <div class="guide-buttons">
+                <a href="{{ url_for('create_guide') }}">
+                    <button>Create a New Guide</button>
+                </a>    
             
-
-
-
-            <a href="{{ url_for('create_guide') }}">
-                <button>Create a New Guide</button>
-            </a>    
-
-            <a href="{{ url_for('guide_inbox') }}">
-                <button>See New Guides</button>
-            </a>    
-
-            <a href="{{ url_for('user_guide') }}">
-                <button>See your guides</button>
-            </a>  
-
-
-
+                <a href="{{ url_for('guide_inbox') }}">
+                    <button>See New Guides</button>
+                </a>    
+            
+                <a href="{{ url_for('user_guide') }}">
+                    <button>See your guides</button>
+                </a>  
+            </div>
+            
 
         </div>
     </div>
