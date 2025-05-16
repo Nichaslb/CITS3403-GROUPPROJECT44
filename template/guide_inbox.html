@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.name }}'s Inbox</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style/mainpage.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style/guide.css') }}" />
+    
+</head>
+<body>
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="logo-area">LEAGUE OF STATS</div>
+
+            <div class="sidebar-menu">
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('guide') }}" class="active">Guides</a>
+                <a href="{{ url_for('profile') }}">Profile</a>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="Title">
+                <h2>{{ username }}'s Inbox</h2>
+            </div>
+
+            <div class="guides-content">
+                {% if shared_guides %}
+                <h3>Guides Sent To You</h3>
+                <div class="shared-guides-container">
+                    <ul>
+                        {% for shared in shared_guides %}
+                            <li class="shared-guide-item">
+                                <strong>{{ shared.guide.title }}</strong> <br>
+                                <em>Sent by: {{ shared.sender.username }}</em> <br>
+                                <form action="{{ url_for('delete_shared_guide', shared_guide_id=shared.id) }}" method="post" style="display:inline;">
+                                    <button type="submit" onclick="return confirm('Delete this shared guide?');">Delete</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% else %}
+                    <p>No guides have been sent to you yet.</p>
+                {% endif %}
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="footer">
+        League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
+    </div>
+</body>
+</html>

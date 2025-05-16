@@ -95,14 +95,96 @@
                 <button>See your guides</button>
             </a>  
 
-
-
-
         </div>
     </div>
 
     <div class="footer">
         League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
     </div>
+
+    
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const friendModal = document.getElementById('friend-modal');
+  const friendList = document.getElementById('friend-list');
+  let currentGuideId = null;
+
+  // Open friend modal on Send button click
+  document.querySelectorAll('.send-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      currentGuideId = button.dataset.guideId;
+      friendList.innerHTML = 'Loading friends...';
+      friendModal.style.display = 'block';
+
+      // Fetch friends list from API
+      fetch('/api/get_friends')
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            friendList.innerHTML = '';
+            data.data.forEach(friend => {
+              const li = document.createElement('li');
+              li.textContent = friend.username;
+              li.style.cursor = 'pointer';
+              li.style.padding = '5px';
+              li.addEventListener('click', () => sendGuideToFriend(friend.id));
+              friendList.appendChild(li);
+            });
+          } else {
+            friendList.innerHTML = 'Failed to load friends.';
+          }
+        });
+    });
+  });
+
+  // Close modal
+  document.getElementById('close-friend-modal').addEventListener('click', () => {
+    friendModal.style.display = 'none';
+  });
+
+  // Send guide to selected friend
+  function sendGuideToFriend(friendId) {
+    fetch('/api/send_guide', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ guide_id: currentGuideId, friend_id: friendId })
+    })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+      friendModal.style.display = 'none';
+    })
+    .catch(() => alert('Error sending guide'));
+  }
+
+  // Delete guide on Delete button click
+  document.querySelectorAll('.delete-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const guideId = button.dataset.guideId;
+      if (confirm('Are you sure you want to delete this guide?')) {
+        fetch('/api/delete_guide', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ guide_id: guideId })
+        })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.message);
+          if (data.status === 'success') {
+            // Remove guide from the list visually
+            const guideElem = document.getElementById(`guide-${guideId}`);
+            if (guideElem) guideElem.remove();
+          }
+        })
+        .catch(() => alert('Error deleting guide'));
+      }
+    });
+  });
+});
+</script>
+
 </body>
 </html>
+
+
+
