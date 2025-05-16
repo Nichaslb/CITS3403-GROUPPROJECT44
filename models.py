@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+
+
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -78,35 +80,18 @@ class Guides(db.Model):
 
     user = db.relationship('User', backref=db.backref('guides', lazy='dynamic'))
 
-#class SharedGuide(db.Model): 
-#    __tablename__ = 'shared_guides'
-#
-#    id = db.Column(db.Integer, primary_key=True)
-#    guide_id = db.Column(db.Integer, db.ForeignKey('guides.id'), nullable=False)
-#    recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-#    shared_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-#    guide = db.relationship('Guides', backref=db.backref('shared_with', lazy='dynamic'))
-#    recipient = db.relationship('User', backref=db.backref('received_guides', lazy='dynamic'))
-
 class SharedGuide(db.Model):
-    __tablename__ = 'shared_guide'
+    __tablename__ = 'shared_guides'
+
     id = db.Column(db.Integer, primary_key=True)
-    guide_id = db.Column(db.Integer, db.ForeignKey('guides.id'))
-    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    guide = db.relationship('Guides')
-    sender = db.relationship('User', foreign_keys=[sender_id])
-    receiver = db.relationship('User', foreign_keys=[receiver_id])
+    guide_id = db.Column(db.Integer, db.ForeignKey('guides.id'), nullable=False)
+    recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    shared_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    __table_args__ = (
-        db.UniqueConstraint('sender_id', 'receiver_id', 'guide_id', name='unique_share'),
-    )
+    guide = db.relationship('Guides', backref=db.backref('shared_with', lazy='dynamic'))
+    recipient = db.relationship('User', backref=db.backref('received_guides', lazy='dynamic'))
 
-def __repr__(self):
-    return f'<SharedGuide {self.sender_id}->{self.receiver_id} guide:{self.guide_id}>'
+
 
 
     def __repr__(self):

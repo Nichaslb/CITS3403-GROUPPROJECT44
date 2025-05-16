@@ -79,53 +79,6 @@ button:hover {
     text-align: center;
 }
 
-
-.shared-guides-container {
-    max-height: 400px;      /* limit height for scrolling */
-    overflow-y: auto;       /* vertical scroll when needed */
-    border: 1px solid #ccc; /* matching border style */
-    padding: 15px;
-    border-radius: 10px;    /* consistent rounded corners */
-    background: #f9f9f9;    /* subtle background */
-}
-
-.shared-guide-item {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
-    word-wrap: break-word;  /* handle long text */
-    white-space: normal;    /* normal wrapping */
-}
-
-.shared-guide-item:last-child {
-    border-bottom: none;
-}
-
-.shared-guide-item strong {
-    display: block;
-    font-size: 1.1em;
-    margin-bottom: 5px;
-}
-
-.shared-guide-item em {
-    color: #555;
-    margin-bottom: 10px;
-    display: block;
-}
-
-.shared-guide-item form button {
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid #c00;
-    background: #fdd;
-    cursor: pointer;
-    color: #900;
-    transition: background 0.3s ease;
-}
-
-.shared-guide-item form button:hover {
-    background: #fbb;
-}
-
 .guide-buttons {
     background-color: rgba(30, 35, 40, 0.8);
     border-radius: 8px;
@@ -138,5 +91,3 @@ button:hover {
     gap: 100px;
     justify-content: center;
 }
-
-

@@ -184,15 +184,7 @@ def create_guide():
 @app.route('/guide_inbox')
 @login_required
 def guide_inbox():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-
-    if not user:
-        flash("User not found.")
-        return redirect(url_for('login'))
-
-    return render_template('guide_inbox.html', user=user, username=user.username)
-
+    return render_template('guide_inbox.html')
 
 @app.route('/user_guide')
 def user_guide():
@@ -584,6 +576,7 @@ def api_remove_friend():
     })
 
 
+from flask import session
 
 @app.route('/submit_guide', methods=['POST'])
 def submit_guide():
@@ -608,11 +601,7 @@ def submit_guide():
     db.session.commit()
 
     flash('Guide created successfully!')
-    user = User.query.get(user_id)
-    
-    username = user.username
-    
-    return redirect(url_for('user_guides', user_id=user_id, username = username ))
+    return redirect(url_for('user_guides', user_id=user_id))
 
 
 @app.route('/user/<int:user_id>/guides')
@@ -643,79 +632,6 @@ def delete_guide(guide_id):
     db.session.commit()
     flash('Guide deleted successfully.')
     return redirect(url_for('user_guide'))
-
-
-
-@app.route('/api/send_guide', methods=['POST'])
-@login_required
-def api_send_guide():
-    data = request.get_json()
-    guide_id = data.get('guide_id')
-    friend_id = data.get('friend_id')
-    user_id = session.get('user_id')
-
-    # Validate guide ownership
-    guide = Guides.query.filter_by(id=guide_id, user_id=user_id).first()
-    if not guide:
-        return jsonify({'status': 'error', 'message': 'Guide not found or unauthorized'}), 404
-
-    # Validate friend relationship
-    friend_rel = Friend.query.filter_by(user_id=user_id, friend_id=friend_id).first()
-    if not friend_rel:
-        return jsonify({'status': 'error', 'message': 'Friend relationship not found'}), 400
-
-    # Create a SharedGuide entry (assuming you have this model for shared guides)
-    shared = SharedGuide(
-        guide_id=guide.id,
-        sender_id=user_id,
-        receiver_id=friend_id,
-        sent_at=datetime.utcnow()
-    )
-    db.session.add(shared)
-    db.session.commit()
-
-    return jsonify({'status': 'success', 'message': 'Guide sent successfully'})
-
-@app.route('/api/delete_guide', methods=['POST'])
-@login_required
-def api_delete_guide():
-    data = request.get_json()
-    guide_id = data.get('guide_id')
-    user_id = session.get('user_id')
-
-    guide = Guides.query.filter_by(id=guide_id, user_id=user_id).first()
-    if not guide:
-        return jsonify({'status': 'error', 'message': 'Guide not found or unauthorized'}), 404
-
-    db.session.delete(guide)
-    db.session.commit()
-
-    return jsonify({'status': 'success', 'message': 'Guide deleted successfully'})
-
-
-
-@app.route('/inbox/<int:user_id>')
-@login_required
-def inbox(user_id):
-    user = User.query.get_or_404(user_id)
-    # Query shared guides where this user is receiver
-    shared_guides = SharedGuide.query.filter_by(receiver_id=user_id).order_by(SharedGuide.created_at.desc()).all()
-    return render_template('inbox.html', user=user, username=user.username, shared_guides=shared_guides)
-
-@app.route('/delete_shared_guide/<int:shared_guide_id>', methods=['POST'])
-@login_required
-def delete_shared_guide(shared_guide_id):
-    shared_guide = SharedGuide.query.get_or_404(shared_guide_id)
-    # Optional: check if current user is receiver of this shared guide before deleting
-    if shared_guide.receiver_id != session.get('user_id'):
-        flash("You don't have permission to delete this.")
-        return redirect(url_for('inbox', user_id=session.get('user_id')))
-    db.session.delete(shared_guide)
-    db.session.commit()
-    flash('Shared guide deleted.')
-    return redirect(url_for('inbox', user_id=session.get('user_id')))
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
