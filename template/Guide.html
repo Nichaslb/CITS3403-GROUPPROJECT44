@@ -46,7 +46,7 @@
                     <div class="icon-placeholder">
                         <img src="{{ url_for('static', filename='static/assets/icons/characters.png') }}" alt="Characters Icon" />
                     </div>
-                    Characters
+                    Champions
                 </a>
 
                 <a href="{{ url_for('patchnotes') }}">
@@ -75,13 +75,19 @@
                 <p>Welcome to the League of Stats Guides section! More content coming soon.</p>
             </div>
 
-
-
-
-
+            <div class="guide-buttons">
+                <a href="{{ url_for('create_guide') }}">
+                    <button>Create a New Guide</button>
+                </a>    
             
-
-
+                <a href="{{ url_for('guide_inbox') }}">
+                    <button>See New Guides</button>
+                </a>    
+            
+                <a href="{{ url_for('user_guide') }}">
+                    <button>See your guides</button>
+                </a>  
+            </div>
 
             <a href="{{ url_for('create_guide') }}">
                 <button>Create a New Guide</button>
@@ -94,6 +100,7 @@
             <a href="{{ url_for('user_guide') }}">
                 <button>See your guides</button>
             </a>  
+
 
         </div>
     </div>
