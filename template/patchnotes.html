@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>League of Stats - Dashboard</title>
-    <link rel="stylesheet" href="static/style/mainpage.css">
-    <link rel="stylesheet" href="static/style/patchnotes.css">
-    <link rel="stylesheet" href="static/style/cursor.css">
-
+    <title>League of Stats - Patch Notes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/mainpage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/patchnotes.css') }}">
 </head>
 
 <body>
@@ -18,47 +16,55 @@
             </div>
             
             <div class="sidebar-menu">
-                <a href="dashboard.html">
+                <a href="{{ url_for('dashboard') }}">
                     <div class="icon-placeholder">
-                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='assets/icons/dashboard.png') }}" alt="Dashboard Icon">
                     </div>
                     Dashboard
                 </a>
-                <a href="characters.html">
+                  
+                <a href="{{ url_for('share') }}">
                     <div class="icon-placeholder">
-                        <img src="../assets/icons/characters.png" alt="characters Icon">
-                    </div>
-                    Characters
-                </a>
-                <a href="patchnotes.html"  class="active">
-                    <div class="icon-placeholder">
-                        <img src="../assets/icons/patch.png" alt="patch Icon">
-                    </div>
-                    Patch Notes
-                </a>
-
-                <a href="Share.html">
-                    <div class="icon-placeholder">
-                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='assets/icons/share.png') }}" alt="Share Icon">
                     </div>
                     Share
                 </a>
-                            
-                <a href="Guide.html" >
+
+                <a href="{{ url_for('friends') }}">
                     <div class="icon-placeholder">
-                        <img src="../assets/icons/dashboard.png" alt="Dashboard Icon">
+                        <img src="{{ url_for('static', filename='assets/icons/friends.png') }}" alt="Friends Icon">
+                    </div>
+                    Friends
+                </a>
+
+                <a href="{{ url_for('guide') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='assets/icons/guides.png') }}" alt="Guides Icon">
                     </div>
                     Guides
                 </a>
 
-                        
-                <a href="profile.html" class="profile-button">
-                    <div class="profile-icon">
-                        <!-- here is the user's avatar, we will build this function later -->
+                <a href="{{ url_for('characters') }}">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='assets/icons/characters.png') }}" alt="Characters Icon">
                     </div>
-                    Profile
+                    Characters
+                </a>
+
+                <a href="{{ url_for('patchnotes') }}" class="active">
+                    <div class="icon-placeholder">
+                        <img src="{{ url_for('static', filename='assets/icons/patch.png') }}" alt="Patch Notes Icon">
+                    </div>
+                    Patch Notes
                 </a>
             </div>
+
+            <a href="{{ url_for('profile') }}" class="profile-button">
+                <div class="profile-icon">
+                    <!-- User avatar placeholder -->
+                </div>
+                Profile
+            </a>
         </div>
         
         <div class="content">
@@ -76,40 +82,69 @@
                 
                 <div class="patch-notes-container">
                     <div class="patch-note" data-patch="25.08">
-                        
-                            <div class="patch-image">
-                                <img src="images/SpecialMord.png" alt="25.08Image">
-                            </div>
-                        
+                        <div class="patch-image">
+                            <img src="{{ url_for('static', filename='assets/images/SpecialMord.png') }}" alt="Patch 25.08 Image">
+                        </div>
                         <div class="patch-content">
                             <span class="patch-number">Patch 25.08</span>
                             <h3 class="patch-title">Patch 25.08 Notes</h3>
                             <div class="patch-date">April 6, 2025</div>
-                            <p class="patch-description"> Here comes patch 25.08! Bringing some balance changes across all the currently active queues. This is also the last patch of the current Ranked Season so make sure to get your 15 wins to lock in Victorious Twisted Fate!
-                                This patch sees improvements to some items that have fallen out of the spotlight like Cryptbloom, Opportunity and Overlord's Bloodmail. As well as Mel and Zoe coming back into the meta after being out of it for a while.
-                                We're also shipping some larger work to Annie to make her a bit more satisfying by moving damage out of Tibbers' sustained damage that can be hard to feel, and into her spellcasts. For Ahri and Syndra, we feel like their builds are a little off; Ahri is building more tanky than we'd like and Syndra is able to opt too easily into lower damage purchases and still be very effective, so we're tweaking that a little. Other changes include follow-up balance to champions we've done larger work on recently like Gwen and Yorick.</p>
+                            <p class="patch-description">
+                                Here comes patch 25.08! Bringing balance changes across all active queues. This is the final patch of the current Ranked Season—make sure to get your 15 wins to lock in Victorious Twisted Fate!
+                                Improvements to Cryptbloom, Opportunity, and Overlord's Bloodmail. Mel and Zoe are making their meta return.
+                                Annie receives tweaks to shift damage from Tibbers' sustained damage to her spellcasts. Ahri and Syndra's builds are also being refined to match intended playstyles. Gwen and Yorick receive follow-up balancing as well.
+                            </p>
                         </div>
                     </div>
+
                     <div class="patch-note" data-patch="25.07">
-                        <!-- Here comes patch 25.07! With major adjustments across all queues. This patch includes several updates aimed at improving the overall experience for both players and champions.
-                        We're seeing some buffs to underperforming items like Cryptbloom, Opportunity, and Overlord's Bloodmail, and champions like Zoe and Mel are making a return to the meta after a while.
-                        Additionally, we're making updates to Annie, focusing on her spellcasting to make her more satisfying to play by moving damage away from Tibbers. For Ahri and Syndra, we're adjusting their builds, as Ahri has been too tanky, and Syndra can opt for lower damage while still being effective. There are also follow-up balance changes for champions like Gwen and Yorick.
-                    -->
+                        <div class="patch-content">
+                            <span class="patch-number">Patch 25.07</span>
+                            <h3 class="patch-title">Patch 25.07 Notes</h3>
+                            <div class="patch-date">March 20, 2025</div>
+                            <p class="patch-description">
+                                Patch 25.07 brings targeted buffs to underperforming champions, item tweaks, and system adjustments to ensure a smoother ranked experience. Annie's playstyle continues to evolve, with more emphasis on active spell usage.
+                            </p>
+                        </div>
                     </div>
+
                     <div class="patch-note" data-patch="25.06">
-                        <!-- Patch 25.06 content -->
+                        <div class="patch-content">
+                            <span class="patch-number">Patch 25.06</span>
+                            <h3 class="patch-title">Patch 25.06 Notes</h3>
+                            <div class="patch-date">March 5, 2025</div>
+                            <p class="patch-description">
+                                Focused on item rebalancing and bug fixes. Notable changes to mage items and jungle experience adjustments.
+                            </p>
+                        </div>
                     </div>
+
                     <div class="patch-note" data-patch="25.05">
-                        <!-- Patch 25.05 content -->
+                        <div class="patch-content">
+                            <span class="patch-number">Patch 25.05</span>
+                            <h3 class="patch-title">Patch 25.05 Notes</h3>
+                            <div class="patch-date">February 20, 2025</div>
+                            <p class="patch-description">
+                                Early-year balance update focusing on stabilizing champion win rates and introducing quality-of-life improvements for ranked matchmaking.
+                            </p>
+                        </div>
                     </div>
+
                     <div class="patch-note" data-patch="25.04">
-                        <!-- Patch 25.04 content -->
+                        <div class="patch-content">
+                            <span class="patch-number">Patch 25.04</span>
+                            <h3 class="patch-title">Patch 25.04 Notes</h3>
+                            <div class="patch-date">February 5, 2025</div>
+                            <p class="patch-description">
+                                Mid-season patch addressing overperforming champions and critical bug fixes. Updates to Mythic item scaling.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div class="footer">
         League of Stats v1.0 • CITS3403 GROUP44 This website has no relation to RIOT GAMES
     </div>
