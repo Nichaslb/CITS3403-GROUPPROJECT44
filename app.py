@@ -194,7 +194,7 @@ def user_guide():
     
     user = User.query.get(session['user_id'])
     guides = user.guides.order_by(Guides.created_at.desc()).all()
-    return render_template('user_guide.html', user=user, guides=guides)
+    return render_template('user_guide.html', user=user, guides=guides, username=user.username)
 
 
 @app.route('/update_profile', methods=['POST'])
@@ -618,6 +618,20 @@ def user_guides(user_id):
     user = User.query.get_or_404(user_id)
     guides = user.guides.order_by(Guides.created_at.desc()).all()
     return render_template('user_guide.html', user=user, guides=guides)
+
+@app.route('/delete_guide/<int:guide_id>', methods=['POST'])
+@login_required
+def delete_guide(guide_id):
+    guide = Guides.query.get_or_404(guide_id)
+    # Check if the guide belongs to the logged-in user
+    if guide.user_id != session['user_id']:
+        flash('You can only delete your own guides.')
+        return redirect(url_for('user_guide'))
+
+    db.session.delete(guide)
+    db.session.commit()
+    flash('Guide deleted successfully.')
+    return redirect(url_for('user_guide'))
 
 if __name__ == '__main__':
     app.run(debug=True)
