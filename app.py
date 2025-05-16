@@ -191,7 +191,7 @@ def guide_inbox():
         flash("User not found.")
         return redirect(url_for('login'))
 
-    return render_template('guide_inbox.html', user=user)
+    return render_template('guide_inbox.html', user=user, username=user.username)
 
 
 @app.route('/user_guide')
